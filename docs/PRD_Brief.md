@@ -16,7 +16,7 @@ Dieser Brief trennt drei Arten von Aussagen:
 
 Unklare oder unvollständige Stellen der Spezifikation sind mit **[Spez unvollständig]** markiert.
 
-**Neu in v0.5:** Antworten aus der Abstimmung zum Plan für Scheibe 1 (07.09.2026-18:48). Neue Entscheidungen D-12 bis D-15: Seed über `/dev/seed` in der angemeldeten App statt über einen Service-Role-Key; `/dev/components` und `/dev/seed` werden hinter dem Login mit ausgeliefert; Migrationsdateien auf die angewendeten Versionen umbenannt und `supabase/config.toml` angelegt; die einmaligen Supabase-Auth-Einstellungen macht Conny im Dashboard nach der Liste in der README. Neue Annahmen A-51 bis A-56, darunter die dokumentierte Kontrast-Ausnahme für gefüllte Buttons. Korrigiert: TX-07 ohne Modus-Texte, US-23 nur dunkel, E-07a nachgetragen, Formulierung zum Client-Key, drei Migrationen, Sidepanel-Breite und Kartenradien begründet.
+**Neu in v0.5:** Antworten aus der Abstimmung zum Plan für Scheibe 1 (07.09.2026-18:48). Neue Entscheidungen D-12 bis D-15: Seed über `/dev/seed` in der angemeldeten App statt über einen Service-Role-Key; `/dev/components` und `/dev/seed` werden hinter dem Login mit ausgeliefert; Migrationsdateien auf die angewendeten Versionen umbenannt und `supabase/config.toml` angelegt; die einmaligen Supabase-Auth-Einstellungen macht Conny im Dashboard nach der Liste in der README. Neue Annahmen A-51 bis A-56, darunter die dokumentierte Kontrast-Ausnahme für gefüllte Buttons. Korrigiert: TX-07 ohne Modus-Texte, US-23 nur dunkel, E-07a nachgetragen, Formulierung zum Client-Key, drei Migrationen, Sidepanel-Breite und Kartenradien begründet. Beim Bauen von Scheibe 1 fiel auf, dass **E-14 in `docs/texte.md` fehlte**, obwohl der Brief den Text seit v0.4 führt; wörtlich nachgetragen.
 
 **Neu in v0.4:** Ein Ziel kann zu mehreren Visionen gehören (D-09, Migration 0003). Testdaten aus deinem Google Doc liegen als `docs/testdaten.json` vor (D-10, D-11). Neu: Story US-25, Test T-17, Annahmen A-47 bis A-50.
 
@@ -104,7 +104,7 @@ Dazu liegen keine expliziten Informationen in der Spezifikation vor. Alle Zeilen
 | Konflikte | Letzter Schreibvorgang gewinnt | Einzelnutzung |
 | Tests | Vitest (Statuslogik, Layout-Berechnung), Playwright (Abläufe) | – |
 | Hosting | Vercel, statische Auslieferung | – |
-| Laufzeit | Node 22 oder neuer, pnpm 10 über Corepack | A-54 |
+| Laufzeit | Node 22 oder neuer, pnpm 12 über Corepack | A-54 |
 | Repository | `github.com/connynaumann/ratn` (privat) | Antwort. Inhalt von hier nicht einsehbar; Claude Code prüft beim Start, ob das Repo leer ist |
 | Supabase | Organisation „RATN“, Projekt `system-map`, Ref `nfmyezhwwwreqjryxlho`, Region eu-central-1 (Frankfurt), Postgres 17, angelegt 07.09.2026 über den Konnektor, 0 € / Monat | Antwort D-08 |
 | Datenbank-Migration | `20260907141301_system_map_schema.sql`, `20260907141325_system_map_harden_functions.sql`, `20260907161048_goal_multi_vision.sql` – alle auf dem Projekt angewendet am 07.09.2026; Security-Advisor ohne Warnungen. Die Dateinamen tragen genau die in der Datenbank eingetragenen Versionen, damit `supabase db push` sie nicht erneut anwendet (D-14); `supabase/config.toml` bindet das Projekt | D-08, D-09, D-14 |
@@ -830,7 +830,7 @@ Dazu liegen keine expliziten Informationen in der Spezifikation vor. Alle Zeilen
 | A-51 | Zusätzliche Tokens | `--on-accent` (#FFFFFF) für Text und Symbole auf `--accent`, ersetzt jedes `#fff` des Design Systems; dazu vier Status-Aliase `--status-in-planung`, `--status-begonnen`, `--status-abgeschlossen`, `--status-blockiert` als Verweise auf bestehende Tokens, ohne neuen Farbwert | 4 |
 | A-52 | Router | Eigener Mini-Router für `/login`, `/`, `/dev/components` und `/dev/seed` statt `react-router`; verarbeitet die Rückkehr vom Magic Link mit Query- und Hash-Parametern | 3 |
 | A-53 | Komponentenaufbau | Die Basis-Komponenten übernehmen die CSS-Regeln aus `framer-dark.html` unverändert (Farben durch Tokens ersetzt); React-Komponenten sind dünne Hüllen. Tailwind dient nur dem Layout | 3, 4 |
-| A-54 | Laufzeit | Node 22 oder neuer, pnpm 10 über Corepack | 3 |
+| A-54 | Laufzeit | Node 22 oder neuer, pnpm über Corepack. In `package.json` steht `packageManager: pnpm@12.3.4` – die auf dem Rechner vorhandene Fassung. Im Plan war von pnpm 10 die Rede; das war meine Annahme, nicht der Bestand | 3 |
 | A-55 | Testwerkzeuge | Testing Library neben Vitest und Playwright | 3 |
 | A-56 | Kontrast gefüllter Buttons | Kontrast mindestens 4,5:1 gilt für Fließtext, Labels, Kartentexte und Statusangaben. Weißer Text auf `--accent-hover` (3,52:1) und `--danger` (3,57:1) erreicht das nicht; da das Design System verbindlich ist (D-05), bleibt es dabei. Bewusste, dokumentierte Ausnahme zu A-10 | 2, 4 |
 

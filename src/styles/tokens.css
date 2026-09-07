@@ -1,0 +1,105 @@
+/*
+ * System Map – Design-Tokens
+ * Quelle: docs/design-system/framer-dark.html, Abschnitt 08 · Brief Abschnitt 4
+ *
+ * Dies ist die EINZIGE Datei unter src/ mit Farbwerten. Der Test
+ * tests/unit/tokens.test.ts (Abnahmetest T-12) prüft das.
+ *
+ * Alle Tokens stehen unter :root[data-theme="dark"] (Brief A-44). Ein heller
+ * Modus ergänzt später nur einen Block :root[data-theme="light"]; die
+ * Komponenten bleiben unverändert, weil sie ausschließlich Tokens verwenden.
+ */
+
+:root[data-theme='dark'] {
+  /* ---------- Hintergründe ---------- */
+  --bg-app: #050505; /* Map-Canvas, Seitenhintergrund */
+  --bg-panel: #0f0f0f; /* Header, Sidepanel-Liste, Ziel- und Initiativ-Karten */
+  --bg-surface: #161616; /* Sidepanel-Detail, Dialoge, Vision-Karte, Popover */
+  --bg-elevated: #1c1c1c; /* Karten im Hover, Toasts */
+  --bg-input: #232323; /* Eingabefelder, Segmented Controls */
+  --bg-hover: #2a2a2a; /* Hover auf Feldern und Zeilen */
+  --bg-active: #333333; /* aktives Segment, Fortschrittsbalken-Hintergrund */
+
+  /* ---------- Rahmen ---------- */
+  --border-subtle: rgba(255, 255, 255, 0.07); /* Kartenrahmen, Trennlinien */
+  --border-default: rgba(255, 255, 255, 0.12); /* Punktraster der Map */
+  --border-strong: rgba(255, 255, 255, 0.2); /* Outline-Buttons, Checkbox */
+
+  /* ---------- Text ---------- */
+  --text-primary: #f5f5f5; /* Titel, Werte */
+  --text-secondary: #999999; /* Labels, Fließtext, Status „In Planung“ */
+  --text-tertiary: #5c5c5c; /* Platzhalter, Datumsangaben auf Karten */
+  --text-disabled: #3d3d3d; /* inaktive Elemente */
+  --text-inverse: #0a0a0a; /* Text auf Teal */
+
+  /*
+   * --on-accent (Brief A-51): Text und Symbole auf gefüllten Flächen. Das
+   * Design System schreibt an diesen Stellen `#fff`; als Token bleibt der
+   * Komponentencode frei von Farbwerten. Kontrast siehe A-56.
+   */
+  --on-accent: #ffffff;
+
+  /* ---------- Akzent ---------- */
+  --accent: #2b6ff2; /* Auswahl, Fokusring, primäre Buttons, Heute-Linie */
+  --accent-hover: #4a85f5; /* Hover primärer Buttons */
+  --accent-muted: rgba(43, 111, 242, 0.16); /* Kinder der ausgewählten Zeile */
+  --teal: #8ed1ce; /* zugleich Zielfarbe 5 */
+  --teal-deep: #57979b;
+
+  /* ---------- Semantik ---------- */
+  --success: #3ecf8e; /* Status „Abgeschlossen“ */
+  --warning: #f5a623; /* Speicherhinweis E-03 */
+  --danger: #f24b4b; /* Status „Blockiert“, Blockade-Linien, Löschen */
+
+  /* ---------- Statusfarben (Brief A-14, A-51) ---------- */
+  --status-in-planung: var(--text-secondary);
+  --status-begonnen: var(--accent);
+  --status-abgeschlossen: var(--success);
+  --status-blockiert: var(--danger);
+
+  /* ---------- Zielfarben (Brief A-13) ---------- */
+  /* MTA-Linienfarben ohne Blau, geprüft auf --bg-app. Ab dem neunten Ziel
+     beginnt die Reihe von vorn. */
+  --line-1: #ee352e; /* MTA 1, 2, 3 */
+  --line-2: #ff6319; /* MTA B, D, F, M */
+  --line-3: #fccc0a; /* MTA N, Q, R, W */
+  --line-4: #6cbe45; /* MTA G */
+  --line-5: #8ed1ce; /* Framer Teal */
+  --line-6: #b933ad; /* MTA 7 */
+  --line-7: #996633; /* MTA J, Z */
+  --line-8: #00933c; /* MTA 4, 5, 6 */
+
+  /* ---------- Radius ---------- */
+  --r-xs: 6px;
+  --r-sm: 8px;
+  --r-md: 10px; /* Felder */
+  --r-lg: 14px; /* Ziel- und Initiativ-Karten */
+  --r-xl: 20px; /* Panels, Dialoge, Vision-Karte */
+  --r-pill: 999px; /* Metrik-Pille, Badges */
+
+  /* ---------- Abstände (4er-Raster) ---------- */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-5: 20px;
+  --s-6: 24px;
+  --s-8: 32px;
+  --s-10: 40px;
+  --s-16: 64px;
+
+  /* ---------- Schatten ---------- */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.5);
+  --shadow-lg:
+    0 16px 48px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.06);
+
+  /* ---------- Schrift ---------- */
+  /* „Inter Variable“ ist der Familienname aus @fontsource-variable/inter;
+     „InterVariable“ steht im Design System (rsms.me). Beide gelistet, damit
+     die Schrift lokal greift und kein CDN nötig ist (Brief A-16, A-51). */
+  --font-sans:
+    'Inter Variable', 'InterVariable', 'Inter', -apple-system, 'Segoe UI',
+    sans-serif;
+  --font-mono: 'SF Mono', 'JetBrains Mono', Menlo, monospace;
+}

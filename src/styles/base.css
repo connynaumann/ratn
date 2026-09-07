@@ -1,0 +1,69 @@
+/*
+ * Grundlagen: Reset und Seitenrahmen.
+ * Übernimmt die Werte aus docs/design-system/framer-dark.html (body, html).
+ *
+ * Der Reset steht in @layer base. Ohne die Schicht wäre er ungeschichtet und
+ * würde Tailwinds Abstands-Utilities schlagen (@layer utilities verliert gegen
+ * ungeschichtetes CSS) – p-4, mt-4 und mx-auto hätten keine Wirkung.
+ * components.css bleibt bewusst ungeschichtet: dort soll das Design System
+ * gewinnen (Brief A-53).
+ */
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html {
+    color-scheme: dark;
+  }
+
+  /*
+   * Keine feste Höhenkette (height: 100% auf html/body/#root): Seiten, die
+   * länger sind als der Bildschirm – Schaukasten und Seed – ließen sich damit
+   * nicht scrollen. Bildschirmfüllende Ansichten setzen ihre Höhe selbst über
+   * 100dvh.
+   */
+  body {
+    min-height: 100dvh;
+    background: var(--bg-app);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    font-size: 14px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  @supports (font-variation-settings: normal) {
+    body {
+      font-optical-sizing: auto;
+    }
+  }
+
+  /* Sichtbarer Fokus für die Tastaturbedienung (Brief A-10) */
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  /* Bewegung reduzieren, wenn das System es verlangt */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      transition-duration: 0.01ms !important;
+      animation-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* Zahlen laufen gleich breit: Zähler, Prozentwerte, Datumsangaben */
+.t-mono,
+.input.num,
+[data-numeric] {
+  font-variant-numeric: tabular-nums;
+}

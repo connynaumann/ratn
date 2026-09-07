@@ -22,6 +22,7 @@ Alle Texte wörtlich übernehmen. Platzhalter in eckigen Klammern werden zur Lau
 | E-11 | Ziehen im Layout Sortiert oder Netz | Zum Verschieben das Layout „Flexibel“ wählen. |
 | E-12 | Sitzung abgelaufen | Bitte melde dich erneut an. |
 | E-13 | JSON-Import: Datei ungültig | Die Datei konnte nicht gelesen werden. Bitte wähle einen Export aus System Map. |
+| E-14 | Letzte Vision eines Ziels abgewählt | Ein Ziel braucht mindestens eine Vision. |
 
 ## Statusmeldungen und Bestätigungen (TX-xx)
 

@@ -22,7 +22,7 @@ Eine Nutzerin (connynaumann@gmail.com), mehrere Geräte, nur dunkler Modus.
 - PNG-Export: `html-to-image`
 - Tests: Vitest (Statuslogik, Layout), Playwright (Abläufe)
 - Hosting: Vercel, statisch
-- Node 22 oder neuer, pnpm 10 über Corepack (`corepack enable pnpm`)
+- Node 22 oder neuer, pnpm über Corepack (`corepack enable pnpm`); festgelegt in `package.json` unter `packageManager`
 
 ## Befehle
 

@@ -1,0 +1,495 @@
+/*
+ * Basis-Komponenten – die CSS-Regeln stammen unverändert aus
+ * docs/design-system/framer-dark.html; nur die Farbwerte sind durch Tokens
+ * ersetzt (Brief A-53). Die React-Komponenten in src/components/ui/ sind dünne
+ * Hüllen um diese Klassen, damit der Vergleich mit der Design-System-Datei
+ * wörtlich möglich bleibt (T-12).
+ *
+ * Zwei bewusste Abweichungen, beide wegen T-12 („kein Hex-Wert im
+ * Komponentencode“):
+ *   1. Jedes Weiß des Design Systems steht hier als var(--on-accent).
+ *   2. Der Pfeil in `select.input` kommt als Lucide-Symbol statt als
+ *      data:-URI; die URI enthielt den fest verdrahteten Wert %23999.
+ */
+
+/* ============ BUTTONS ============ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  padding: 9px 18px;
+  border-radius: var(--r-md);
+  transition:
+    background 0.15s,
+    border-color 0.15s,
+    color 0.15s;
+}
+.btn-primary {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+.btn-primary:hover:not(:disabled) {
+  background: var(--accent-hover);
+}
+.btn-secondary {
+  background: var(--bg-input);
+  color: var(--text-primary);
+}
+.btn-secondary:hover:not(:disabled) {
+  background: var(--bg-hover);
+}
+.btn-ghost {
+  background: transparent;
+  color: var(--text-secondary);
+}
+.btn-ghost:hover:not(:disabled) {
+  color: var(--text-primary);
+  background: var(--bg-surface);
+}
+.btn-danger {
+  background: var(--danger);
+  color: var(--on-accent);
+}
+.btn-danger:hover:not(:disabled) {
+  filter: brightness(1.08);
+}
+.btn:disabled {
+  background: var(--bg-surface);
+  color: var(--text-disabled);
+  cursor: not-allowed;
+}
+.btn.sm {
+  padding: 5px 12px;
+  font-size: 12px;
+  border-radius: var(--r-sm);
+}
+.btn.lg {
+  padding: 13px 26px;
+  font-size: 15px;
+}
+
+/* ============ FELDER ============ */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 220px;
+}
+.field label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+.input {
+  background: var(--bg-input);
+  border: 1px solid transparent;
+  border-radius: var(--r-md);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  padding: 9px 12px;
+  outline: none;
+  transition:
+    border-color 0.15s,
+    background 0.15s;
+  width: 100%;
+}
+.input::placeholder {
+  color: var(--text-tertiary);
+}
+.input:hover:not(:disabled) {
+  background: var(--bg-hover);
+}
+.input:focus {
+  border-color: var(--accent);
+  background: var(--bg-input);
+}
+.input:disabled {
+  color: var(--text-disabled);
+  cursor: not-allowed;
+}
+/* Fehlerzustand für E-06 und E-10: „Feld rot“ */
+.input[aria-invalid='true'] {
+  border-color: var(--danger);
+}
+.field-error {
+  font-size: 12px;
+  color: var(--danger);
+}
+.input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+.input-wrap .unit {
+  position: absolute;
+  right: 12px;
+  font-size: 12px;
+  color: var(--text-tertiary);
+  pointer-events: none;
+}
+.input-wrap .icon {
+  position: absolute;
+  left: 12px;
+  color: var(--text-tertiary);
+  display: flex;
+}
+.input.has-icon {
+  padding-left: 34px;
+}
+.input.num {
+  width: 88px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+select.input {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 32px;
+  cursor: pointer;
+}
+/* Ersetzt die data:-URI des Design Systems, siehe Kopf dieser Datei */
+.select-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  width: 100%;
+}
+.select-wrap .select-caret {
+  position: absolute;
+  right: 12px;
+  display: flex;
+  color: var(--text-secondary);
+  pointer-events: none;
+}
+
+/* ============ SEGMENTED CONTROL ============ */
+.seg {
+  display: inline-flex;
+  background: var(--bg-input);
+  border-radius: var(--r-md);
+  padding: 2px;
+}
+.seg button {
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 16px;
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.seg button.on {
+  background: var(--bg-active);
+  color: var(--text-primary);
+  box-shadow: var(--shadow-sm);
+}
+.seg button:not(.on):hover:not(:disabled) {
+  color: var(--text-primary);
+}
+.seg button:disabled {
+  color: var(--text-disabled);
+  cursor: not-allowed;
+}
+
+/* ============ TABS ============ */
+.tabs {
+  display: inline-flex;
+  gap: var(--s-1);
+}
+.tab {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 7px 14px;
+  border-radius: var(--r-sm);
+  cursor: pointer;
+}
+.tab.on {
+  background: var(--bg-active);
+  color: var(--text-primary);
+}
+.tab:not(.on):hover:not(:disabled) {
+  color: var(--text-primary);
+}
+.tab:disabled {
+  color: var(--text-disabled);
+  cursor: not-allowed;
+}
+
+/* ============ TOGGLE / CHECKBOX ============ */
+.toggle {
+  position: relative;
+  width: 36px;
+  height: 21px;
+  background: var(--bg-active);
+  border-radius: var(--r-pill);
+  cursor: pointer;
+  transition: background 0.15s;
+  border: none;
+  flex: none;
+}
+.toggle::after {
+  content: '';
+  position: absolute;
+  top: 2.5px;
+  left: 2.5px;
+  width: 16px;
+  height: 16px;
+  background: var(--on-accent);
+  border-radius: 50%;
+  transition: transform 0.18s;
+}
+.toggle.on {
+  background: var(--accent);
+}
+.toggle.on::after {
+  transform: translateX(15px);
+}
+.toggle:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.check {
+  width: 18px;
+  height: 18px;
+  border-radius: 5px;
+  border: 1.5px solid var(--border-strong);
+  background: transparent;
+  color: var(--on-accent);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+  padding: 0;
+  flex: none;
+}
+.check.on {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.check svg {
+  opacity: 0;
+  transition: opacity 0.1s;
+}
+.check.on svg {
+  opacity: 1;
+}
+.check:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* ============ PANEL UND PROPERTY ROWS ============ */
+.panel {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-xl);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  /* Das Design System zeigt 300 px für ein frei schwebendes Panel. Unser
+     Sidepanel läuft über die volle Höhe und trägt mehr Inhalt: 320 px
+     (Brief Abschnitt 4, U-6). */
+  width: 320px;
+}
+.panel-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--s-4) var(--s-4) var(--s-3);
+}
+.panel-head .title {
+  font-size: 13px;
+  font-weight: 600;
+}
+.panel-close {
+  background: none;
+  border: none;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+  padding: 4px;
+  border-radius: var(--r-xs);
+}
+.panel-close:hover {
+  color: var(--text-primary);
+  background: var(--bg-hover);
+}
+.panel-body {
+  padding: 0 var(--s-4) var(--s-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+}
+.prop-row {
+  display: grid;
+  grid-template-columns: 92px 1fr;
+  align-items: center;
+  gap: var(--s-3);
+}
+.prop-row .plabel {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+.prop-row .pctrl {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  justify-content: flex-end;
+}
+.divider {
+  height: 1px;
+  background: var(--border-subtle);
+  margin: var(--s-1) calc(-1 * var(--s-4));
+}
+
+/* ============ LAYER TREE ============ */
+.tree {
+  background: var(--bg-panel);
+  border-radius: var(--r-lg);
+  border: 1px solid var(--border-subtle);
+  padding: var(--s-2);
+  width: 280px;
+}
+.tree-row {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  padding: 7px 10px;
+  border-radius: var(--r-sm);
+  font-size: 13px;
+  color: var(--text-primary);
+  cursor: pointer;
+  width: 100%;
+  border: none;
+  background: transparent;
+  font-family: var(--font-sans);
+  text-align: left;
+}
+.tree-row:hover {
+  background: var(--bg-surface);
+}
+.tree-row.sel {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+.tree-row.sel .tree-ico {
+  color: rgba(255, 255, 255, 0.8);
+}
+.tree-row .tree-ico {
+  color: var(--accent);
+  display: flex;
+}
+.tree-row.sel-child {
+  background: var(--accent-muted);
+}
+.tree-row .caret {
+  color: var(--text-tertiary);
+  font-size: 10px;
+  width: 12px;
+  flex: none;
+}
+.tree-row .tree-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/* Statuspunkt 6 px rechts (Brief Abschnitt 4) */
+.tree-row .tree-status {
+  margin-left: auto;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  flex: none;
+}
+.ind-1 {
+  padding-left: 26px;
+}
+.ind-2 {
+  padding-left: 44px;
+}
+.ind-3 {
+  padding-left: 62px;
+}
+
+/* ============ BADGES ============ */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: var(--r-pill);
+  background: var(--bg-surface);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-subtle);
+}
+.badge.blue {
+  background: var(--accent-muted);
+  color: var(--accent-hover);
+  border-color: transparent;
+}
+.badge.green {
+  background: rgba(62, 207, 142, 0.12);
+  color: var(--success);
+  border-color: transparent;
+}
+.badge.dot::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  flex: none;
+}
+
+/* ============ TYPOGRAFIE ============ */
+.t-h2 {
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+.t-h3 {
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.t-body {
+  font-size: 15px;
+  color: var(--text-secondary);
+  max-width: 480px;
+}
+.t-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+.t-mono {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+.sec-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
