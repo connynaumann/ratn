@@ -1,6 +1,6 @@
 # PRD-Brief für Claude Code – System Map
 
-**Erstellt:** 07.09.2026-15:26 · **Aktualisiert:** 07.09.2026-18:10 · **Version:** 0.4 (freigegeben, Infrastruktur und Testdaten eingetragen)
+**Erstellt:** 07.09.2026-15:26 · **Aktualisiert:** 07.09.2026-18:48 · **Version:** 0.5 (freigegeben, Abstimmung zu Scheibe 1 eingearbeitet)
 
 **Quellen:** Google Doc „260907-System Map-Spezifikation“ (Stand 07.09.2026); `framer-dark-design-system.html` (Dropbox „System Map“, Stand 23.07.2026); Google Doc „260907-System Map-Testdaten“ (Stand 07.09.2026); Antworten von Conny vom 07.09.2026 (elf Fragen)
 
@@ -15,6 +15,8 @@ Dieser Brief trennt drei Arten von Aussagen:
 - **Annahme A-xx** – fehlt in der Spezifikation, Vorschlag von mir. Alle Annahmen stehen gesammelt in Abschnitt 14. Zum Freigeben reicht: „A-03 nein, stattdessen …“.
 
 Unklare oder unvollständige Stellen der Spezifikation sind mit **[Spez unvollständig]** markiert.
+
+**Neu in v0.5:** Antworten aus der Abstimmung zum Plan für Scheibe 1 (07.09.2026-18:48). Neue Entscheidungen D-12 bis D-15: Seed über `/dev/seed` in der angemeldeten App statt über einen Service-Role-Key; `/dev/components` und `/dev/seed` werden hinter dem Login mit ausgeliefert; Migrationsdateien auf die angewendeten Versionen umbenannt und `supabase/config.toml` angelegt; die einmaligen Supabase-Auth-Einstellungen macht Conny im Dashboard nach der Liste in der README. Neue Annahmen A-51 bis A-56, darunter die dokumentierte Kontrast-Ausnahme für gefüllte Buttons. Korrigiert: TX-07 ohne Modus-Texte, US-23 nur dunkel, E-07a nachgetragen, Formulierung zum Client-Key, drei Migrationen, Sidepanel-Breite und Kartenradien begründet.
 
 **Neu in v0.4:** Ein Ziel kann zu mehreren Visionen gehören (D-09, Migration 0003). Testdaten aus deinem Google Doc liegen als `docs/testdaten.json` vor (D-10, D-11). Neu: Story US-25, Test T-17, Annahmen A-47 bis A-50.
 
@@ -83,7 +85,7 @@ Antwort: **Alles aus der Spezifikation ist Must.** Die Reihenfolge der Umsetzung
 | Browser | aktuelle Versionen von Chrome, Safari, Firefox, Edge | A-07 |
 | Sprache der Oberfläche | Deutsch | A-08 |
 | Ansprache | keine Anrede nötig (Einzelnutzung); Buttons als Verben im Infinitiv, z. B. „Speichern“ | A-09 |
-| Barrierefreiheit | Formulare und Sidepanel per Tastatur bedienbar; Kontrast mindestens 4,5:1 im dunklen Modus; Ziehen auf der Karte ohne Tastaturalternative | A-10 |
+| Barrierefreiheit | Formulare und Sidepanel per Tastatur bedienbar; Kontrast mindestens 4,5:1 für Fließtext, Labels, Kartentexte und Statusangaben; gefüllte Buttons auf `--accent-hover` und `--danger` folgen dem Design System und liegen bei rund 3,5:1 (dokumentierte Ausnahme, A-56); Ziehen auf der Karte ohne Tastaturalternative | A-10, A-56 |
 
 ## 3 Stack und Umgebung
 
@@ -102,10 +104,10 @@ Dazu liegen keine expliziten Informationen in der Spezifikation vor. Alle Zeilen
 | Konflikte | Letzter Schreibvorgang gewinnt | Einzelnutzung |
 | Tests | Vitest (Statuslogik, Layout-Berechnung), Playwright (Abläufe) | – |
 | Hosting | Vercel, statische Auslieferung | – |
-| Laufzeit | Node 22, pnpm | – |
+| Laufzeit | Node 22 oder neuer, pnpm 10 über Corepack | A-54 |
 | Repository | `github.com/connynaumann/ratn` (privat) | Antwort. Inhalt von hier nicht einsehbar; Claude Code prüft beim Start, ob das Repo leer ist |
 | Supabase | Organisation „RATN“, Projekt `system-map`, Ref `nfmyezhwwwreqjryxlho`, Region eu-central-1 (Frankfurt), Postgres 17, angelegt 07.09.2026 über den Konnektor, 0 € / Monat | Antwort D-08 |
-| Datenbank-Migration | `20260907_0001_system_map_schema.sql`, `20260907_0002_harden_functions.sql`, `20260907_0003_goal_multi_vision.sql` – alle auf dem Projekt angewendet am 07.09.2026; Security-Advisor ohne Warnungen | D-08, D-09 |
+| Datenbank-Migration | `20260907141301_system_map_schema.sql`, `20260907141325_system_map_harden_functions.sql`, `20260907161048_goal_multi_vision.sql` – alle auf dem Projekt angewendet am 07.09.2026; Security-Advisor ohne Warnungen. Die Dateinamen tragen genau die in der Datenbank eingetragenen Versionen, damit `supabase db push` sie nicht erneut anwendet (D-14); `supabase/config.toml` bindet das Projekt | D-08, D-09, D-14 |
 | Vercel | Konto vorhanden, noch kein Team und kein Projekt; Projekt wird in Scheibe 7 aus dem Repository angelegt | Antwort |
 | Kosten | Free Tier beider Dienste. Hinweis: Supabase pausiert kostenlose Projekte nach 7 Tagen ohne Zugriff; Reaktivierung per Klick im Dashboard | – |
 | Domain | Vercel-Adresse reicht | A-11 |
@@ -144,7 +146,7 @@ Dazu liegen keine expliziten Informationen in der Spezifikation vor. Alle Zeilen
 | Semantik | `--success` | #3ECF8E | Status „Abgeschlossen“ |
 | | `--warning` | #F5A623 | Speicherhinweis E-03 |
 | | `--danger` | #F24B4B | Status „Blockiert“, Blockade-Linien, Löschen |
-| Radius | `--r-xs` … `--r-xl`, `--r-pill` | 6, 8, 10, 14, 20, 999 px | Felder 10, Karten 14, Panels und Dialoge 20, Metrik-Pille 999 |
+| Radius | `--r-xs` … `--r-xl`, `--r-pill` | 6, 8, 10, 14, 20, 999 px | Felder 10; Karten nach der Kartentabelle: Vision `--r-xl` (20), Ziel und Initiative `--r-lg` (14); Panels und Dialoge 20; Metrik-Pille 999 |
 | Abstand | `--s-1` … `--s-16` | 4er-Raster: 4, 8, 12, 16, 20, 24, 32, 40, 64 px | alle Abstände |
 | Schatten | `--shadow-sm`, `--shadow-md`, `--shadow-lg` | siehe Datei | Segmente, Toasts, Panels (lg mit 1 px Hairline) |
 | Schrift | `--font-sans` | InterVariable, Inter, -apple-system, sans-serif | alles außer Zahlen |
@@ -200,7 +202,7 @@ Inter Variable über das npm-Paket `@fontsource-variable/inter` (Lizenz SIL OFL)
 | Fit to Screen, Als PNG speichern, Menü | `.btn-ghost` mit Icon | Icons: Lucide, 14 px |
 | Filter-Button | `.btn-secondary sm` + `.badge.blue` mit Anzahl | Popover als `.panel` |
 | Visionsname editierbar | `.t-h3`; bei Klick `.input` in gleicher Größe | Enter oder Verlassen speichert |
-| Sidepanel | Panel (`.panel`): `--bg-surface`, `--r-xl`, `--shadow-lg`, Breite 320 px | rechts, volle Höhe, 16 px Abstand zum Rand |
+| Sidepanel | Panel (`.panel`): `--bg-surface`, `--r-xl`, `--shadow-lg`, Breite **320 px** | rechts, volle Höhe, 16 px Abstand zum Rand. Die 300 px des Design Systems gelten für ein frei schwebendes Panel; unseres läuft über die volle Höhe und trägt mehr Inhalt, daher 320 px |
 | Sidepanel Liste | Layer Tree (`.tree`, `.tree-row`, `.ind-1`, `.ind-2`) | ausgewählte Zeile `.sel` (`--accent`), Kinder `.sel-child` (`--accent-muted`); Caret `▾ / ›`; Statuspunkt 6 px rechts |
 | Sidepanel Detail | Property Rows (`.prop-row`: Label 92 px links `--text-secondary`, Control rechts) mit `.divider` zwischen Gruppen | Kopf `.panel-head` mit Titel und `×` (zurück zur Liste) |
 | Textfelder, Datum, Beschreibung | `.input` (kein Rahmen, Fokus 1 px `--accent`) | Datum im `--font-mono` |
@@ -632,7 +634,7 @@ Als Conny möchte ich ein Ziel mehreren Visionen zuordnen, damit ein gemeinsames
 
 **US-23 PNG-Export** — S-03
 
-- Gegeben Map-View, wenn ich „Als PNG speichern“ klicke, dann wird eine PNG-Datei mit allen Karten der aktiven Vision, im aktuellen Modus (hell oder dunkel), mindestens 2-fach aufgelöst, heruntergeladen.
+- Gegeben Map-View, wenn ich „Als PNG speichern“ klicke, dann wird eine PNG-Datei mit allen Karten der aktiven Vision, im dunklen Modus, mindestens 2-fach aufgelöst, heruntergeladen.
 - Gegeben Linear-View, dann enthält die PNG-Datei alle Swimlanes und die gesamte Zeitachse.
 
 **US-24 JSON-Export und -Import** — S-03 (A-04)
@@ -659,7 +661,7 @@ VITE_APP_URL=
 VITE_ALLOWED_EMAIL=
 ```
 
-Die Werte liegen in `.env.local` (nicht im Repo, in `.gitignore`). Der Publishable Key ist für den Client bestimmt; der Service-Role-Key wird nirgends verwendet.
+Die Werte liegen in `.env.local` (nicht im Repo, in `.gitignore`). Im Frontend liegt ausschließlich der öffentliche Client-Key (`sb_publishable_…`); der Service-Role-Key wird nirgends verwendet – auch nicht im Seed (D-12).
 
 Import/Export: JSON (A-04) und PNG (Spez). Tracking: keins. Zahlungen: keine.
 
@@ -674,6 +676,7 @@ Import/Export: JSON (A-04) und PNG (Spez). Tracking: keins. Zahlungen: keine.
 | E-05 | Login-Link abgelaufen oder ungültig | Zurück zu S-01 mit Hinweis | „Der Link ist abgelaufen. Fordere einen neuen an.“ |
 | E-06 | Titel leer oder länger als 80 Zeichen | Feld rot, Anlegen oder Speichern blockiert | „Bitte gib einen Titel mit 1 bis 80 Zeichen ein.“ |
 | E-07 | Löschen bestätigen | Dialog S-09; Zahl wird eingesetzt; bei 0 Unterkarten nur der erste Satz | „[Typ] „[Titel]“ löschen? Damit werden auch [n] zugehörige Karten gelöscht. Das lässt sich nicht rückgängig machen.“ |
+| E-07a | Löschen bestätigen, ohne Unterkarten | Dialog S-09 | „[Typ] „[Titel]“ löschen? Das lässt sich nicht rückgängig machen.“ |
 | E-08 | Abhängigkeit würde einen Kreis erzeugen | Auswahl blockiert, Hinweis unter dem Feld | „Diese Abhängigkeit würde einen Kreis erzeugen und ist nicht möglich.“ |
 | E-09 | PNG-Export schlägt fehl | Kurzer Hinweis unten (Toast, 4 s) | „Das Bild konnte nicht erstellt werden. Bitte versuche es noch einmal.“ |
 | E-10 | Enddatum vor Startdatum | Feld rot, Wert nicht übernommen | „Das Enddatum muss nach dem Startdatum liegen.“ |
@@ -681,6 +684,8 @@ Import/Export: JSON (A-04) und PNG (Spez). Tracking: keins. Zahlungen: keine.
 | E-12 | Sitzung abgelaufen | Weiterleitung zu S-01, danach zurück zur App | „Bitte melde dich erneut an.“ |
 | E-13 | JSON-Import: Datei ungültig | Hinweis im Dialog, kein Import | „Die Datei konnte nicht gelesen werden. Bitte wähle einen Export aus System Map.“ |
 | E-14 | Letzte Vision eines Ziels abgewählt | Auswahl bleibt bestehen, Hinweis unter dem Feld | „Ein Ziel braucht mindestens eine Vision.“ |
+
+Für den Wortlaut aller Oberflächentexte ist `docs/texte.md` maßgeblich. Weichen Brief und `docs/texte.md` voneinander ab, gilt `docs/texte.md`; die Abweichung wird hier nachgezogen.
 
 Weitere Texte (TX-xx) für `docs/texte.md`:
 
@@ -692,7 +697,7 @@ Weitere Texte (TX-xx) für `docs/texte.md`:
 | TX-04 | Hinweis bei manuellem Status | „Status manuell gesetzt“ |
 | TX-05 | Zähler | „[x] / [y] Initiativen abgeschlossen“ |
 | TX-06 | JSON-Import Bestätigung | „[n] Karten importieren? Alle vorhandenen Daten werden ersetzt.“ |
-| TX-07 | Buttons und Beschriftungen | „Neues Ziel“, „Neue Initiative“, „Neue Metrik“, „Vision anlegen“, „Anlegen“, „Abbrechen“, „Löschen“, „Zurück zur Liste“, „Fit to Screen“, „Als PNG speichern“, „Daten exportieren“, „Daten importieren“, „Abmelden“, „Filter“, „Zurücksetzen“, „Map“, „Linear“, „Flexibel“, „Sortiert“, „Netz“, „Woche“, „Monat“, „Hell“, „Dunkel“, „System“, „Blockiert durch“, „Hinzufügen“, „manuell setzen“ |
+| TX-07 | Buttons und Beschriftungen | „Neues Ziel“, „Neue Initiative“, „Neue Metrik“, „Vision anlegen“, „Anlegen“, „Abbrechen“, „Löschen“, „Zurück zur Liste“, „Fit to Screen“, „Als PNG speichern“, „Daten exportieren“, „Daten importieren“, „Abmelden“, „Filter“, „Zurücksetzen“, „Map“, „Linear“, „Flexibel“, „Sortiert“, „Netz“, „Woche“, „Monat“, „Blockiert durch“, „Hinzufügen“, „manuell setzen“ |
 | TX-08 | Status | „In Planung“, „Begonnen“, „Abgeschlossen“, „Blockiert“ |
 | TX-09 | Priorität | „Hoch“, „Mittel“, „Niedrig“, „Keine“ |
 
@@ -704,7 +709,7 @@ Dazu liegen keine expliziten Informationen in der Spezifikation vor. Alle Zeilen
 |---|---|
 | Flüssiges Ziehen bis 200 Karten | Nur sichtbare Karten voll rendern (React Flow `onlyRenderVisibleElements`); Layout-Berechnung außerhalb des Render-Pfads |
 | Erste Anzeige unter 2 s | Alle Daten in einer Abfrage je Tabelle laden; Schrift lokal; keine Bibliotheken über 200 kB zusätzlich |
-| Sicherheit | Nur `anon`-Key im Client; Row Level Security auf allen Tabellen; keine Service-Keys im Frontend |
+| Sicherheit | Nur der öffentliche Client-Key (`sb_publishable_…`) im Frontend, niemals der Service-Role-Key; Row Level Security auf allen Tabellen |
 | Datenschutz | Supabase-Region Frankfurt; kein Tracking; keine Cookies außer Sitzung |
 | Barrierefreiheit | Siehe Abschnitt 2 |
 | Wartbarkeit | README mit Setup in unter 15 Minuten: Supabase-Projekt anlegen, Migrationen ausführen, `.env` füllen, `pnpm dev` |
@@ -714,7 +719,7 @@ Dazu liegen keine expliziten Informationen in der Spezifikation vor. Alle Zeilen
 
 | Scheibe | Inhalt | Stories | Prüfbar durch |
 |---|---|---|---|
-| 1 Grundgerüst | Vite, React, TypeScript, Tailwind, `tokens.css` aus dem Design System, Basis-Komponenten (Button, Input, Segmented, Toggle, Checkbox, Badge, Panel, Tree-Row) nach `docs/design-system/framer-dark.html`, Supabase-Client (Migrationen sind bereits angewendet, siehe Abschnitt 3), Auth mit `VITE_ALLOWED_EMAIL`, App-Rahmen mit Header und Sidepanel-Platzhalter, Seed aus `docs/testdaten.json`, README | US-01, US-21 | Login funktioniert, Komponenten-Schaukasten unter `/dev/components` gleicht der Design-System-Datei, Tabellen existieren, `pnpm test` läuft |
+| 1 Grundgerüst | Vite, React, TypeScript, Tailwind, `tokens.css` aus dem Design System, Basis-Komponenten (Button, Input, Segmented, Toggle, Checkbox, Badge, Panel, Tree-Row) nach `docs/design-system/framer-dark.html`, Supabase-Client (Migrationen sind bereits angewendet, siehe Abschnitt 3), Auth mit `VITE_ALLOWED_EMAIL`, App-Rahmen mit Header und Sidepanel-Platzhalter, Seed aus `docs/testdaten.json` über `/dev/seed` (D-12), README mit den einmaligen Supabase-Einstellungen (D-15) | US-01, US-21 | Login funktioniert, Komponenten-Schaukasten unter `/dev/components` gleicht der Design-System-Datei, Tabellen existieren, `pnpm test` läuft |
 | 2 Karten ohne Canvas | Sidepanel Liste und Detail, Anlegen über Buttons in der Liste (Plus statt Hover), Bearbeiten, Löschen, Autosave, Fehlerbalken E-03, Zuordnung Ziel ↔ Vision | US-02, US-04 bis US-07, US-18, US-22, US-25 | Alle Kartentypen anlegbar und änderbar, Änderungen nach Neuladen vorhanden |
 | 3 Map Flexibel | React Flow, Karten nach Abschnitt 4, Kanten, Hover-Plus, Ziehen mit Speichern, Zoom, Fit to Screen, Minimap | US-03, US-12, US-13 | Karten ziehbar, Positionen auf zweitem Gerät gleich |
 | 4 Statuslogik | Ableitung, manuelle Übersteuerung, Abhängigkeiten mit S-10 und Kreisprüfung, Fortschritt, Zähler, Filter | US-08 bis US-11, US-19, US-20 | Vitest-Tests der Statustabelle grün; Blockieren sichtbar |
@@ -726,7 +731,7 @@ Dazu liegen keine expliziten Informationen in der Spezifikation vor. Alle Zeilen
 
 | ID | Story | Schritte | Erwartet |
 |---|---|---|---|
-| T-01 | US-01 | S-01 → freigegebene E-Mail → Link öffnen | S-02 sichtbar |
+| T-01 | US-01 | S-01 → freigegebene E-Mail → Link öffnen | S-02 sichtbar. **Manueller Test:** der Klick auf den Link im Postfach lässt sich nicht automatisieren |
 | T-02 | US-01 | S-01 → andere E-Mail | E-04, keine Mail |
 | T-03 | US-02, US-03 | Vision anlegen → Hover → Neues Ziel „Finanzierung“ | Ziel mit `--line-1`, Kante zur Vision, Sidepanel zeigt es |
 | T-04 | US-04, US-05 | Initiative „Portfolio erstellen“ → Metrik „Portfolio liegt als komprimiertes PDF vor“ → abhaken | Initiative zeigt 100 %, Ziel zeigt 100 %, Ziel Abgeschlossen, Zähler „1 / 1“ |
@@ -763,6 +768,10 @@ Dazu liegen keine expliziten Informationen in der Spezifikation vor. Alle Zeilen
 | D-09 | Datenmodell geändert: Ein Ziel kann zu mehreren Visionen gehören (`goal_vision`). Umgesetzt in Migration 0003 |
 | D-10 | „Bildhauerei / Ton“ und „Skizzieren“ werden eigene Initiativen: „Weiterbildung Bildhauerei / Ton“ und „Weiterbildung Skizzieren“; die Sammel-Initiative „Weiterbildungen“ entfällt |
 | D-11 | Für die Testdaten werden Status, Zeiträume, Prioritäten, Metriken und Abhängigkeiten erfunden, damit alle Ansichten und Tests etwas zeigen |
+| D-12 | Der Seed läuft über `/dev/seed` in der angemeldeten App, nicht über einen Service-Role-Key. Er schreibt nur, wenn für die Nutzerin noch keine Vision besteht, und zeigt danach die Zeilenzahl je Tabelle. `pnpm db:seed` gibt nur diesen Weg als Hinweis aus |
+| D-13 | `/dev/components` und `/dev/seed` werden mit ausgeliefert, nur hinter dem Login erreichbar und nirgends in der Oberfläche verlinkt. So bleibt T-12 auf der Vercel-Adresse prüfbar |
+| D-14 | Die drei Migrationsdateien wurden auf die tatsächlich angewendeten Versionen umbenannt (Inhalt unverändert), `supabase/config.toml` mit `project_id` angelegt |
+| D-15 | Die einmaligen Supabase-Auth-Einstellungen (Site URL, Redirect URLs, Gültigkeit des Magic Links, Sitzungsdauer, Mailvorlage) nimmt Conny im Dashboard vor, nach der Liste im Abschnitt „Einmalige Supabase-Einstellungen“ der README |
 
 **Annahmen zur Bestätigung**
 
@@ -818,12 +827,18 @@ Dazu liegen keine expliziten Informationen in der Spezifikation vor. Alle Zeilen
 | A-48 | Letzte Vision | Ein Ziel braucht mindestens eine Vision; die Oberfläche verhindert das Abwählen der letzten (E-14). Entfällt die letzte Verknüpfung doch, löscht die Datenbank das Ziel | 5 |
 | A-49 | Position geteilter Karten | Ein Ziel hat eine Position, die in allen Visionen gilt. Im Layout „Flexibel“ liegen geteilte Ziele daher in beiden Maps an derselben Stelle; „Fit to Screen“ gleicht das aus. Sortiert und Netz berechnen ohnehin je Vision | 5, 7 |
 | A-50 | Inhalte der Testdaten | Titel und Zuordnung stammen aus dem Google Doc. Status, Zeiträume, Prioritäten, Metriken, Abhängigkeiten, Beschreibungen und Positionen sind erfunden (D-11) und in der App änderbar | 15 |
+| A-51 | Zusätzliche Tokens | `--on-accent` (#FFFFFF) für Text und Symbole auf `--accent`, ersetzt jedes `#fff` des Design Systems; dazu vier Status-Aliase `--status-in-planung`, `--status-begonnen`, `--status-abgeschlossen`, `--status-blockiert` als Verweise auf bestehende Tokens, ohne neuen Farbwert | 4 |
+| A-52 | Router | Eigener Mini-Router für `/login`, `/`, `/dev/components` und `/dev/seed` statt `react-router`; verarbeitet die Rückkehr vom Magic Link mit Query- und Hash-Parametern | 3 |
+| A-53 | Komponentenaufbau | Die Basis-Komponenten übernehmen die CSS-Regeln aus `framer-dark.html` unverändert (Farben durch Tokens ersetzt); React-Komponenten sind dünne Hüllen. Tailwind dient nur dem Layout | 3, 4 |
+| A-54 | Laufzeit | Node 22 oder neuer, pnpm 10 über Corepack | 3 |
+| A-55 | Testwerkzeuge | Testing Library neben Vitest und Playwright | 3 |
+| A-56 | Kontrast gefüllter Buttons | Kontrast mindestens 4,5:1 gilt für Fließtext, Labels, Kartentexte und Statusangaben. Weißer Text auf `--accent-hover` (3,52:1) und `--danger` (3,57:1) erreicht das nicht; da das Design System verbindlich ist (D-05), bleibt es dabei. Bewusste, dokumentierte Ausnahme zu A-10 | 2, 4 |
 
 **Offen (von dir zu liefern):** nichts. Alle Angaben liegen vor.
 
 ## 15 Assets-Checkliste
 
-- [x] `docs/PRD_Brief.md` – diese Datei (v0.3)
+- [x] `docs/PRD_Brief.md` – diese Datei (v0.5)
 - [x] `docs/design-system/framer-dark.html` – Kopie von `framer-dark-design-system.html` aus Dropbox „System Map“
 - [x] Schrift – npm-Paket `@fontsource-variable/inter`, wird in Scheibe 1 installiert
 - [x] `docs/texte.md` – aus Abschnitt 10 erzeugt, ergänzt um Buttons, Feldbeschriftungen, leere Zustände, Mail-Vorlage
@@ -831,7 +846,8 @@ Dazu liegen keine expliziten Informationen in der Spezifikation vor. Alle Zeilen
 - [x] `.env.example` und `.env.local` – siehe Abschnitt 9
 - [x] Konten: Supabase (Projekt angelegt), Vercel (Konto vorhanden)
 - [x] `CLAUDE.md` – liegt vor
-- [x] `supabase/migrations/` – zwei Migrationen, angewendet
+- [x] `supabase/migrations/` – drei Migrationen, angewendet; Dateinamen auf die angewendeten Versionen angeglichen (D-14)
+- [x] `supabase/config.toml` – bindet das Repository an das Supabase-Projekt (D-14)
 
 ## 16 Startprompt für Claude Code
 

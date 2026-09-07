@@ -22,7 +22,7 @@ Eine Nutzerin (connynaumann@gmail.com), mehrere Geräte, nur dunkler Modus.
 - PNG-Export: `html-to-image`
 - Tests: Vitest (Statuslogik, Layout), Playwright (Abläufe)
 - Hosting: Vercel, statisch
-- Node 22, pnpm
+- Node 22 oder neuer, pnpm 10 über Corepack (`corepack enable pnpm`)
 
 ## Befehle
 
@@ -31,8 +31,8 @@ Eine Nutzerin (connynaumann@gmail.com), mehrere Geräte, nur dunkler Modus.
 - Tests: `pnpm test` · Abläufe: `pnpm test:e2e`
 - Lint und Typen: `pnpm lint && pnpm typecheck`
 - Build: `pnpm build`
-- Datenbank: Migrationen liegen in `supabase/migrations/` und sind auf dem Supabase-Projekt bereits angewendet. Neue Migrationen dort ablegen und mit `supabase db push` anwenden.
-- Testdaten: `pnpm db:seed` lädt `docs/testdaten.json`
+- Datenbank: Migrationen liegen in `supabase/migrations/` und sind auf dem Supabase-Projekt bereits angewendet. Ihre Dateinamen tragen die angewendeten Versionen; `supabase/config.toml` bindet das Projekt. Neue Migrationen dort ablegen und mit `supabase db push` anwenden.
+- Testdaten: anmelden, `/dev/seed` öffnen, Knopf drücken (Brief D-12). Der Seed schreibt nur in eine leere Datenbank und nennt danach die Zeilenzahl je Tabelle. `pnpm db:seed` gibt nur diesen Hinweis aus – es gibt keinen Weg am Login vorbei, weil Row Level Security greift und kein Service-Role-Key verwendet wird.
 
 ## Ordnerstruktur
 
@@ -48,7 +48,9 @@ src/features/linear/               Linear-View
 src/features/sidepanel/            Liste und Detail
 src/lib/status.ts                  Statuslogik und Fortschritt (reine Funktionen, getestet)
 src/lib/supabase.ts                Client, Laden, Speichern mit Debounce
+src/dev/                           Dev-Routen /dev/components und /dev/seed
 supabase/migrations/               SQL-Migrationen
+supabase/config.toml               Bindung an das Supabase-Projekt
 tests/                             Vitest und Playwright
 .env.example                       alle Umgebungsvariablen, ohne Werte
 ```
@@ -61,7 +63,7 @@ tests/                             Vitest und Playwright
 4. **Akzeptanzkriterien werden zu Tests.** Jedes Kriterium einer Story ist mindestens ein automatisierter Test. Die Statustabelle aus Abschnitt 5 und die Fortschrittsrechnung sind mit Vitest abgedeckt.
 5. **Verifizieren.** Nach jeder Scheibe: `pnpm lint && pnpm typecheck && pnpm test`, Entwicklungsserver starten, Ergebnis im Browser prüfen.
 6. **Texte** wörtlich aus `docs/texte.md`, referenziert über ihre IDs (E-xx, TX-xx). Keine eigenen Formulierungen. Fehlende Texte als Frage melden. Sprache Deutsch, Buttons als Verben im Infinitiv.
-7. **Design.** Nur Tokens aus `src/styles/tokens.css`. Kein Hex-Wert im Komponentencode. Komponenten sehen aus wie in `docs/design-system/framer-dark.html`; Zuordnung in `docs/PRD_Brief.md`, Abschnitt 4. Unter `/dev/components` liegt ein Schaukasten aller Basis-Komponenten zum Vergleich.
+7. **Design.** Nur Tokens aus `src/styles/tokens.css`. Kein Hex-Wert im Komponentencode. Komponenten sehen aus wie in `docs/design-system/framer-dark.html`; Zuordnung in `docs/PRD_Brief.md`, Abschnitt 4. Unter `/dev/components` liegt ein Schaukasten aller Basis-Komponenten zum Vergleich, unter `/dev/seed` der Seed. Beide Routen werden mit ausgeliefert, sind nur hinter dem Login erreichbar und nirgends verlinkt (Brief D-13).
 8. **Zustände.** Jeder Screen hat die Zustände leer, laden und Fehler wie im Brief beschrieben.
 9. **Daten.** Alle Schreibvorgänge optimistisch mit 500 ms Debounce; bei Fehler Hinweis E-03 und Wiederholung alle 10 s. Lesen nur über den Anon-Key mit Row Level Security.
 10. **Keine Secrets** im Code oder in Commits. `.env.example` bei jeder neuen Variable ergänzen. `.env.local` ist in `.gitignore`.
@@ -87,7 +89,7 @@ tests/                             Vitest und Playwright
 ## Nicht tun
 
 - Keine zusätzlichen Bibliotheken ohne Rückfrage (Ausnahme: die im Stack genannten)
-- Keine Änderung am Datenmodell ohne Rückfrage; Migrationen nie umschreiben, nur neue anlegen
+- Keine Änderung am Datenmodell ohne Rückfrage; den **Inhalt** von Migrationen nie umschreiben, nur neue anlegen. Die Dateinamen wurden am 07.09.2026 einmalig auf die angewendeten Versionen angeglichen (Brief D-14); das bleibt die Ausnahme
 - Keine Funktionen aus „Nicht im Umfang“: Teilen, Benachrichtigungen, Kommentare, Anhänge, Undo, Smartphone-Layout, Mehrsprachigkeit, heller Modus
 - Keine Secrets committen, keinen Service-Role-Key im Frontend
 - Keine Skripte, die Nutzerdaten löschen, ohne ausdrückliche Anweisung

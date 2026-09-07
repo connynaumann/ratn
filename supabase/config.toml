@@ -1,0 +1,9 @@
+# Supabase CLI – Projektbindung
+# Erstellt: 07.09.2026 · Brief D-14
+#
+# Die drei Migrationen in supabase/migrations/ sind auf diesem Projekt bereits
+# angewendet. Die Dateinamen tragen genau die Versionen, die in der Tabelle
+# supabase_migrations.schema_migrations stehen; `supabase db push` findet daher
+# nichts mehr zu tun. Inhalte nie ändern, nur neue Migrationen anlegen.
+
+project_id = "nfmyezhwwwreqjryxlho"
