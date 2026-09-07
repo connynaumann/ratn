@@ -1,5 +1,6 @@
 # pnpm 12 liest Einstellungen aus dieser Datei, nicht mehr aus package.json.
-# esbuild darf sein Postinstall-Skript ausführen; es verlinkt nur die für die
-# Plattform passende Binärdatei aus dem bereits geladenen Paket.
-onlyBuiltDependencies:
-  - esbuild
+# esbuild darf sein Postinstall-Skript ausführen; es verlinkt nur die zur
+# Plattform passende Binärdatei aus dem bereits geladenen Paket. Ohne diese
+# Freigabe bricht `pnpm install` mit ERR_PNPM_IGNORED_BUILDS ab.
+allowBuilds:
+  esbuild: true
