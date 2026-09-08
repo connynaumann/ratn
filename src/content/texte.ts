@@ -42,7 +42,7 @@ export const TX = {
   'TX-14': 'Neue Metrik',
   'TX-15': 'Heute',
   'TX-16': '[ist] / [soll] [Einheit]',
-  // Übergangstext: ab Scheibe 6 steht dort die Karte, dann entfällt TX-17.
+  // Übergangstext: ab Scheibe 3 steht dort die Karte, dann entfällt TX-17.
   'TX-17':
     'Die Karte kommt später. Bis dahin arbeitest du in der Übersicht rechts.',
 } as const

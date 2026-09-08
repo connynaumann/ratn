@@ -43,8 +43,10 @@ Alle Texte wörtlich übernehmen. Platzhalter in eckigen Klammern werden zur Lau
 | TX-16 | Metrik mit Zahlenwert auf der Karte | [ist] / [soll] [Einheit] |
 | TX-17 | Hauptfläche, solange es noch keine Karte gibt | Die Karte kommt später. Bis dahin arbeitest du in der Übersicht rechts. |
 
-TX-17 ist ein Übergangstext: ab Scheibe 6 der Umsetzung (Map-View) steht auf
-der Hauptfläche die Karte, und TX-17 entfällt ersatzlos.
+TX-17 ist ein Übergangstext: ab Scheibe 3 der Umsetzung (Brief Abschnitt 12,
+„Map Flexibel“) steht auf der Hauptfläche die Karte, und TX-17 entfällt
+ersatzlos. Scheibe 5 ergänzt nur weitere Layouts, Scheibe 6 eine zweite
+Ansicht.
 
 ## Typbezeichnungen (TX-07a)
 

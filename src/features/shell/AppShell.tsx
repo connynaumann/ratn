@@ -113,7 +113,7 @@ export function AppShell() {
       <SpeicherHinweis />
       <div className="flex min-h-0 flex-1">
         {/*
-          Auf der Hauptfläche steht bis Scheibe 6 der Übergangstext TX-17;
+          Auf der Hauptfläche steht bis Scheibe 3 der Übergangstext TX-17;
           danach ersetzt ihn die Map.
         */}
         <main className="min-w-0 flex-1">
