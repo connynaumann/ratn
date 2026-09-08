@@ -8,7 +8,7 @@ import {
   Textarea,
   Toggle,
 } from '@/components/ui'
-import { E, PRIORITAET, STATUS, TX, TYP, UI, fuelle } from '@/content/texte'
+import { E, PRIORITAET, SR, STATUS, TX, TYP, UI, fuelle } from '@/content/texte'
 import { enddatumGueltig } from '@/lib/datum'
 import { ZIELFARBEN } from '@/lib/farben'
 import type { Goal, Initiative, KartenRef, Metric, Vision } from '@/lib/model'
@@ -245,11 +245,13 @@ export function Detail({ ref_, onNeueMetrik, onLoeschen }: Props) {
       {ref_.typ === 'goal' && (
         <PropRow label={UI.sidepanel.felder.farbe}>
           <div className="farbwahl">
-            {ZIELFARBEN.map((farbe) => (
+            {ZIELFARBEN.map((farbe, nummer) => (
               <button
                 key={farbe}
                 type="button"
-                aria-label={farbe}
+                // Ohne eigene Beschriftung läse ein Screenreader den
+                // Tokennamen „line-1“ vor.
+                aria-label={fuelle(SR['SR-04'], { n: nummer + 1 })}
                 aria-pressed={(karte as Goal).color === farbe}
                 style={{ background: `var(--${farbe})` }}
                 onClick={() => karteAendern(ref_, { color: farbe })}

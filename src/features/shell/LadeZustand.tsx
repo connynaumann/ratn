@@ -1,3 +1,5 @@
+import { SR } from '@/content/texte'
+
 /**
  * Ladezustand für S-02 (Brief Abschnitt 7).
  *
@@ -31,7 +33,7 @@ export function LadeZustand() {
         </div>
       </div>
       <span className="sr-only" role="status">
-        Wird geladen …
+        {SR['SR-03']}
       </span>
     </div>
   )

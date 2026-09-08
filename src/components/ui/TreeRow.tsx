@@ -1,4 +1,5 @@
 import type { CSSProperties, ReactNode } from 'react'
+import { SR } from '@/content/texte'
 import { cx } from './klassen'
 
 /**
@@ -61,7 +62,7 @@ export function TreeRow({
         <span
           className="caret"
           role="button"
-          aria-label={aufgeklappt ? 'Zuklappen' : 'Aufklappen'}
+          aria-label={aufgeklappt ? SR['SR-02'] : SR['SR-01']}
           tabIndex={-1}
           onClick={(e) => {
             e.stopPropagation()

@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { describe, expect, it } from 'vitest'
-import { E, TX, PRIORITAET, STATUS, TYP, UI, fuelle } from '@/content/texte'
+import { E, SR, TX, PRIORITAET, STATUS, TYP, UI, fuelle } from '@/content/texte'
 
 /**
  * CLAUDE.md, Arbeitsregel 6: Texte wörtlich aus docs/texte.md, referenziert
@@ -30,6 +30,11 @@ describe('Fehler und Hinweise (E-xx)', () => {
     expect(ausTabelle(id)).toBe(E[id as keyof typeof E])
   })
 
+  it('deckt alle TX-IDs der Quelle ab', () => {
+    const inQuelle = [...QUELLE.matchAll(/^\| (TX-\d+) \|/gm)].map((m) => m[1])
+    expect(new Set(inQuelle)).toEqual(new Set(Object.keys(TX)))
+  })
+
   it('deckt alle E-IDs der Quelle ab', () => {
     const inQuelle = [...QUELLE.matchAll(/^\| (E-\d+a?) \|/gm)].map((m) => m[1])
     expect(new Set(inQuelle)).toEqual(new Set(Object.keys(E)))
@@ -39,6 +44,17 @@ describe('Fehler und Hinweise (E-xx)', () => {
 describe('Statusmeldungen (TX-xx)', () => {
   it.each(Object.keys(TX))('%s steht wörtlich in docs/texte.md', (id) => {
     expect(ausTabelle(id)).toBe(TX[id as keyof typeof TX])
+  })
+})
+
+describe('Assistive Texte (SR-xx)', () => {
+  it.each(Object.keys(SR))('%s steht wörtlich in docs/texte.md', (id) => {
+    expect(ausTabelle(id)).toBe(SR[id as keyof typeof SR])
+  })
+
+  it('deckt alle SR-IDs der Quelle ab', () => {
+    const inQuelle = [...QUELLE.matchAll(/^\| (SR-\d+) \|/gm)].map((m) => m[1])
+    expect(new Set(inQuelle)).toEqual(new Set(Object.keys(SR)))
   })
 })
 

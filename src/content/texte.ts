@@ -42,6 +42,21 @@ export const TX = {
   'TX-14': 'Neue Metrik',
   'TX-15': 'Heute',
   'TX-16': '[ist] / [soll] [Einheit]',
+  // Übergangstext: ab Scheibe 6 steht dort die Karte, dann entfällt TX-17.
+  'TX-17':
+    'Die Karte kommt später. Bis dahin arbeitest du in der Übersicht rechts.',
+} as const
+
+/**
+ * Assistive Texte (SR-xx): nicht sichtbar, aber vorgelesen. Sie sind Text für
+ * die Nutzerin und stehen deshalb genauso in docs/texte.md wie alles andere
+ * (Brief A-10).
+ */
+export const SR = {
+  'SR-01': 'Aufklappen',
+  'SR-02': 'Zuklappen',
+  'SR-03': 'Wird geladen …',
+  'SR-04': 'Zielfarbe [n]',
 } as const
 
 /** Typbezeichnungen (TX-07a) */

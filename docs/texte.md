@@ -41,6 +41,10 @@ Alle Texte wörtlich übernehmen. Platzhalter in eckigen Klammern werden zur Lau
 | TX-14 | Tooltip Hover-Plus auf Initiative | Neue Metrik |
 | TX-15 | Heute-Linie in der Linear-View | Heute |
 | TX-16 | Metrik mit Zahlenwert auf der Karte | [ist] / [soll] [Einheit] |
+| TX-17 | Hauptfläche, solange es noch keine Karte gibt | Die Karte kommt später. Bis dahin arbeitest du in der Übersicht rechts. |
+
+TX-17 ist ein Übergangstext: ab Scheibe 6 der Umsetzung (Map-View) steht auf
+der Hauptfläche die Karte, und TX-17 entfällt ersatzlos.
 
 ## Typbezeichnungen (TX-07a)
 
@@ -131,6 +135,19 @@ Alle Texte wörtlich übernehmen. Platzhalter in eckigen Klammern werden zur Lau
 | Ziel ohne Initiativen im Sidepanel | Noch keine Initiativen. | Neue Initiative |
 | Initiative ohne Metriken im Detail | Keine Metriken. Optional. | Neue Metrik |
 | Linear-View ohne Ziele | Noch keine Ziele mit Zeitraum. | – |
+
+## Assistive Texte (nur für Screenreader) (SR-xx)
+
+Diese Texte sind nicht sichtbar, werden aber vorgelesen. Sie sind Text für die
+Nutzerin und gehören deshalb hierher; Brief A-10 macht die Tastatur- und
+Screenreader-Bedienung zur Anforderung.
+
+| ID | Verwendung | Text |
+|---|---|---|
+| SR-01 | Caret einer zugeklappten Zeile im Sidepanel | Aufklappen |
+| SR-02 | Caret einer aufgeklappten Zeile im Sidepanel | Zuklappen |
+| SR-03 | Ladezustand von S-02 | Wird geladen … |
+| SR-04 | Farbkreis im Detailpanel eines Ziels | Zielfarbe [n] |
 
 ## E-Mails (Supabase Auth, Vorlage „Magic Link“)
 

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Button } from '@/components/ui'
-import { E, UI } from '@/content/texte'
+import { E, TX, UI } from '@/content/texte'
 import type { Kartentyp, KartenRef } from '@/lib/model'
 import { betroffeneKarten } from '@/lib/aktionen'
 import { LoeschenDialog } from '@/features/dialoge/LoeschenDialog'
@@ -113,13 +113,11 @@ export function AppShell() {
       <SpeicherHinweis />
       <div className="flex min-h-0 flex-1">
         {/*
-          Die Hauptfläche bleibt leer, solange es eine Vision gibt: hier kommt
-          in Scheibe 3 die Map hin. Ein Platzhaltertext stünde nicht in
-          docs/texte.md, und eigene Formulierungen sind nicht vorgesehen
-          (CLAUDE.md, Arbeitsregel 6).
+          Auf der Hauptfläche steht bis Scheibe 6 der Übergangstext TX-17;
+          danach ersetzt ihn die Map.
         */}
         <main className="min-w-0 flex-1">
-          {aktiveVision == null && (
+          {aktiveVision == null ? (
             <EmptyState
               text={UI.leer.keineVision}
               aktion={
@@ -131,6 +129,8 @@ export function AppShell() {
                 </Button>
               }
             />
+          ) : (
+            <EmptyState text={TX['TX-17']} />
           )}
         </main>
         <SidePanel
