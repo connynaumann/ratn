@@ -159,6 +159,16 @@ select.input {
   position: relative;
   display: inline-flex;
   align-items: center;
+  /*
+   * Von Haus aus so breit wie nötig. Ein erzwungenes width:100% hätte im
+   * Header den Visionsnamen zusammengedrückt; volle Breite braucht der
+   * Wrapper nur dort, wo das Feld eine Zeile füllt.
+   */
+  width: auto;
+  max-width: 100%;
+}
+.field .select-wrap,
+.prop-row .select-wrap {
   width: 100%;
 }
 .select-wrap .select-caret {
@@ -492,4 +502,181 @@ select.input {
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--accent);
+}
+
+/* ============ DIALOGE ============ */
+/* Brief Abschnitt 4: `.panel` zentriert, 400 px, Overlay rgba(0,0,0,.6) */
+.dialog-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+}
+.dialog-panel {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px;
+  max-width: calc(100vw - 2 * var(--s-4));
+  max-height: calc(100dvh - 2 * var(--s-4));
+  overflow: auto;
+}
+.dialog-fuss {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--s-2);
+  margin-top: var(--s-2);
+}
+
+/* ============ MEHRZEILIGES FELD ============ */
+.textarea {
+  min-height: 72px;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+/* ============ SIDEPANEL ============ */
+/* Fuß mit dem Speicherhinweis TX-02 / TX-03 */
+.panel-fuss {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-2);
+  padding: var(--s-3) var(--s-4);
+  border-top: 1px solid var(--border-subtle);
+  font-size: 12px;
+  color: var(--text-tertiary);
+}
+
+/* Speicherhinweis E-03: Balken unter dem Header */
+.speicher-hinweis {
+  padding: var(--s-2) var(--s-4);
+  background: rgba(245, 166, 35, 0.12);
+  color: var(--warning);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* Farbwahl im Detailpanel: acht Kreise 18 px (Brief Abschnitt 4) */
+.farbwahl {
+  /* Acht Kreise à 18 px passen mit 4 px Abstand in die 182 px breite
+     Steuerspalte einer Property Row; mit 8 px bräche die Reihe um. */
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-1);
+}
+.farbwahl button {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  padding: 0;
+  background-clip: content-box;
+}
+.farbwahl button[aria-pressed='true'] {
+  border-color: var(--text-primary);
+}
+
+/* Zeile mit einem Knopf zum Anlegen unter einer Gruppe */
+.tree-aktion {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  padding: 4px 10px;
+}
+
+/* ============ SIDEPANEL, DETAIL ============ */
+.metrik-liste {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+}
+.metrik-zeile {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+}
+.metrik-kopf {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+}
+.metrik-werte {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  padding-left: 26px;
+}
+.metrik-werte .input.num {
+  width: 64px;
+}
+
+.visionen-feld {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+}
+.visionen-zeile {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  cursor: pointer;
+}
+
+/* Farbpunkt eines Ziels in der Liste */
+.ziel-farbe {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex: none;
+}
+
+.tree-liste {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Abschnittsbeschriftungen im Detail (Brief Abschnitt 4, .sec-label) */
+.detail-abschnitt {
+  margin-top: var(--s-2);
+}
+
+/* ============ HEADER ============ */
+/* Visionsname: als Text ein Knopf, im Bearbeiten ein Feld gleicher Größe */
+.visions-titel {
+  /* Der Name hat Vorrang: die Auswahl daneben gibt Platz ab, nicht umgekehrt */
+  flex: 1 1 auto;
+  min-width: 0;
+  background: none;
+  border: none;
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  cursor: text;
+  padding: 4px 6px;
+  margin-left: -6px;
+  border-radius: var(--r-sm);
+  text-align: left;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.visions-titel:hover {
+  background: var(--bg-hover);
+}
+.visions-titel-feld .input {
+  padding: 4px 6px;
+}
+.visions-auswahl {
+  /*
+   * Schmal halten: die Auswahl zeigt denselben Namen wie der Titel daneben.
+   * Wenn der Platz knapp wird, soll die Auswahl abschneiden, nicht der Name.
+   */
+  width: auto;
+  min-width: 96px;
+  max-width: 120px;
+  font-size: 12px;
+  padding-top: 5px;
+  padding-bottom: 5px;
 }

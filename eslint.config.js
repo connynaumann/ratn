@@ -24,6 +24,12 @@ export default tseslint.config(
     },
   },
   {
+    // Fast Refresh gibt es in Tests nicht: dort dürfen Hilfsfunktionen neben
+    // Komponenten stehen.
+    files: ['tests/**/*.{ts,tsx}'],
+    rules: { 'react-refresh/only-export-components': 'off' },
+  },
+  {
     files: ['**/*.mjs'],
     extends: [js.configs.recommended],
     languageOptions: { globals: globals.node },

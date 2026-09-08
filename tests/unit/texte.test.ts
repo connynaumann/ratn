@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { describe, expect, it } from 'vitest'
-import { E, TX, PRIORITAET, STATUS, TYP, fuelle } from '@/content/texte'
+import { E, TX, PRIORITAET, STATUS, TYP, UI, fuelle } from '@/content/texte'
 
 /**
  * CLAUDE.md, Arbeitsregel 6: Texte wörtlich aus docs/texte.md, referenziert
@@ -61,6 +61,31 @@ describe('Schlüsselwerte', () => {
       const spalten = (zeile ?? '').split('|').map((s) => s.trim())
       expect(spalten[2]).toBe(wert.text)
       expect(spalten[3]).toBe(wert.kuerzel)
+    }
+  })
+})
+
+describe('Beschriftungen im Sidepanel', () => {
+  /** Die Zeile „Feldbeschriftungen“ listet die Labels mit · getrennt. */
+  function ausListe(zeilenAnfang: string): string[] {
+    const zeile = QUELLE.split('\n').find((z) =>
+      z.trimStart().startsWith(`| ${zeilenAnfang} |`),
+    )
+    const spalten = (zeile ?? '').split('|').map((s) => s.trim())
+    return (spalten[2] ?? '').split('·').map((s) => s.trim())
+  }
+
+  it('jede Feldbeschriftung im Code steht in docs/texte.md', () => {
+    const quelle = ausListe('Feldbeschriftungen')
+    for (const wert of Object.values(UI.sidepanel.felder)) {
+      expect(quelle, `„${wert}“ fehlt in docs/texte.md`).toContain(wert)
+    }
+  })
+
+  it('jede Abschnittsbeschriftung im Code steht in docs/texte.md', () => {
+    const quelle = ausListe('Abschnittsbeschriftungen im Detail')
+    for (const wert of Object.values(UI.sidepanel.abschnitte)) {
+      expect(quelle, `„${wert}“ fehlt in docs/texte.md`).toContain(wert)
     }
   })
 })

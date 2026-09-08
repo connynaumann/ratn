@@ -1,6 +1,9 @@
 import { Filter, Maximize2, ImageDown, Menu } from 'lucide-react'
 import { Badge, Button, Segmented, Tabs } from '@/components/ui'
 import { TX, UI, fuelle } from '@/content/texte'
+import type { Vision } from '@/lib/model'
+import { VisionsAuswahl } from './VisionsAuswahl'
+import { VisionsTitel } from './VisionsTitel'
 
 /**
  * S-03 Header, Anordnung nach Brief A-31:
@@ -13,14 +16,13 @@ import { TX, UI, fuelle } from '@/content/texte'
  * zeigen ihre Beschriftung deshalb erst ab 1280 px; darunter bleiben Symbol
  * und aria-label.
  *
- * In Scheibe 1 ist der Header vollständig gestaltet, aber ohne Funktion: die
- * Bedienelemente gehören zu den Scheiben 2 bis 7. Sie sind deaktiviert, damit
- * niemand ins Leere klickt, und dienen hier als Vergleichsfläche für das
- * Design System.
+ * Seit Scheibe 2 arbeiten Visionsname (US-02) und Visionsauswahl (A-21). Die
+ * übrigen Bedienelemente gehören zu den Scheiben 3 bis 7 und sind deaktiviert,
+ * damit niemand ins Leere klickt.
  */
 type Props = {
-  /** Titel der aktiven Vision; ohne Vision der Schriftzug der App */
-  titel: string
+  /** Aktive Vision; ohne Vision steht der Schriftzug der App im Header */
+  vision: Vision | null
   initiativenGesamt: number
   initiativenAbgeschlossen: number
 }
@@ -37,7 +39,7 @@ const LAYOUT_OPTIONEN = [
 ] as const
 
 export function Header({
-  titel,
+  vision,
   initiativenGesamt,
   initiativenAbgeschlossen,
 }: Props) {
@@ -49,7 +51,14 @@ export function Header({
         borderBottom: '1px solid var(--border-subtle)',
       }}
     >
-      <h1 className="t-h3 truncate">{titel}</h1>
+      <div className="flex min-w-0 items-center gap-2">
+        {vision != null ? (
+          <VisionsTitel vision={vision} />
+        ) : (
+          <h1 className="t-h3 truncate">{UI.login.titel}</h1>
+        )}
+        <VisionsAuswahl />
+      </div>
 
       <div className="flex items-center gap-3">
         <Tabs

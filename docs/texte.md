@@ -93,7 +93,7 @@ Alle Texte wörtlich übernehmen. Platzhalter in eckigen Klammern werden zur Lau
 | Panel-Titel Liste | Übersicht |
 | Zurück zur Liste | Zurück zur Liste |
 | Abschnittsbeschriftungen im Detail | Allgemein · Status · Zeitraum · Metriken · Abhängigkeiten |
-| Feldbeschriftungen | Titel · Beschreibung · Status · Priorität · Startdatum · Enddatum · Farbe · Fortschritt · Blockiert durch |
+| Feldbeschriftungen | Titel · Typ · Beschreibung · Status · Priorität · Startdatum · Enddatum · Farbe · Fortschritt · Blockiert durch · Visionen |
 | Schalter manueller Status | manuell setzen |
 | Abhängigkeit hinzufügen | Hinzufügen |
 | Metrik hinzufügen | Neue Metrik |

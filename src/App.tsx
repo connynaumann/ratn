@@ -3,6 +3,7 @@ import { AuthProvider } from '@/features/auth/AuthProvider'
 import { useAuth } from '@/features/auth/useAuth'
 import { LoginScreen } from '@/features/auth/LoginScreen'
 import { AppShell } from '@/features/shell/AppShell'
+import { StoreProvider } from '@/store/StoreProvider'
 import { LadeZustand } from '@/features/shell/LadeZustand'
 import { ComponentsShowcase } from '@/dev/ComponentsShowcase'
 import { SeedPage } from '@/dev/SeedPage'
@@ -31,13 +32,19 @@ function Routen() {
   if (laedt) return <LadeZustand />
   if (!angemeldet) return <LoginScreen />
 
+  // Der Store lädt beim Einhängen alle Tabellen; die Dev-Seiten brauchen ihn
+  // nicht und sollen ihn auch nicht anstoßen.
   switch (pfad) {
     case ROUTEN.devComponents:
       return <ComponentsShowcase />
     case ROUTEN.devSeed:
       return <SeedPage />
     default:
-      return <AppShell />
+      return (
+        <StoreProvider>
+          <AppShell />
+        </StoreProvider>
+      )
   }
 }
 

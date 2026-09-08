@@ -105,6 +105,8 @@ export const UI = {
       farbe: 'Farbe',
       fortschritt: 'Fortschritt',
       blockiertDurch: 'Blockiert durch',
+      typ: 'Typ',
+      visionen: 'Visionen',
     },
     manuellSetzen: 'manuell setzen',
     abhaengigkeitHinzufuegen: 'Hinzufügen',
