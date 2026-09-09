@@ -1,4 +1,5 @@
 import { Filter, Maximize2, ImageDown, Menu } from 'lucide-react'
+import { useReactFlow } from '@xyflow/react'
 import { Badge, Button, Segmented, Tabs } from '@/components/ui'
 import { TX, UI, fuelle } from '@/content/texte'
 import type { Vision } from '@/lib/model'
@@ -43,6 +44,9 @@ export function Header({
   initiativenGesamt,
   initiativenAbgeschlossen,
 }: Props) {
+  // Derselbe ReactFlowProvider wie der Canvas: „Fit to Screen“ wirkt auf die
+  // Map, obwohl der Knopf im Header sitzt (US-13).
+  const { fitView } = useReactFlow()
   return (
     <header
       className="grid shrink-0 grid-cols-[1fr_auto_1fr] items-center gap-4 px-4 py-3"
@@ -79,7 +83,8 @@ export function Header({
           variante="ghost"
           groesse="sm"
           aria-label={UI.header.fitToScreen}
-          disabled
+          disabled={vision == null}
+          onClick={() => void fitView({ duration: 300 })}
         >
           <Maximize2 size={14} strokeWidth={1.5} aria-hidden="true" />
           <span className="hidden xl:inline">{UI.header.fitToScreen}</span>

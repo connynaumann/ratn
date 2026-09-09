@@ -150,6 +150,9 @@ Screenreader-Bedienung zur Anforderung.
 | SR-02 | Caret einer aufgeklappten Zeile im Sidepanel | Zuklappen |
 | SR-03 | Ladezustand von S-02 | Wird geladen … |
 | SR-04 | Farbkreis im Detailpanel eines Ziels | Zielfarbe [n] |
+| SR-05 | Zoom-Steuerung der Map, größer | Hineinzoomen |
+| SR-06 | Zoom-Steuerung der Map, kleiner | Herauszoomen |
+| SR-07 | Minimap unten rechts auf der Map | Übersicht der ganzen Map |
 
 ## E-Mails (Supabase Auth, Vorlage „Magic Link“)
 

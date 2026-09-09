@@ -57,6 +57,9 @@ export const SR = {
   'SR-02': 'Zuklappen',
   'SR-03': 'Wird geladen …',
   'SR-04': 'Zielfarbe [n]',
+  'SR-05': 'Hineinzoomen',
+  'SR-06': 'Herauszoomen',
+  'SR-07': 'Übersicht der ganzen Map',
 } as const
 
 /** Typbezeichnungen (TX-07a) */

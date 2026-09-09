@@ -1,8 +1,10 @@
 import { useState } from 'react'
+import { ReactFlowProvider } from '@xyflow/react'
 import { Button } from '@/components/ui'
-import { E, TX, UI } from '@/content/texte'
+import { E, UI } from '@/content/texte'
 import type { Kartentyp, KartenRef } from '@/lib/model'
 import { betroffeneKarten } from '@/lib/aktionen'
+import { MapView } from '@/features/map/MapView'
 import { LoeschenDialog } from '@/features/dialoge/LoeschenDialog'
 import { NeueKarteDialog } from '@/features/dialoge/NeueKarteDialog'
 import { SidePanel } from '@/features/sidepanel/SidePanel'
@@ -15,8 +17,9 @@ import { SpeicherHinweis } from './SpeicherHinweis'
 /**
  * S-02 App-Rahmen: Header oben, Hauptfläche links, Sidepanel rechts.
  *
- * Die Hauptfläche bleibt bis Scheibe 3 leer – dort kommt die Karte hin. Bis
- * dahin steht der leere Zustand E-01 dort, und gearbeitet wird im Sidepanel.
+ * Seit Scheibe 3 steht auf der Hauptfläche die Map. Der ReactFlowProvider
+ * umschließt Header und Canvas gemeinsam, damit „Fit to Screen“ im Header
+ * dieselbe Instanz erreicht wie die Zoom-Steuerung auf dem Canvas.
  */
 type NeueKarte = { typ: Kartentyp; elternId: string }
 
@@ -104,6 +107,7 @@ export function AppShell() {
       : undefined
 
   return (
+    <ReactFlowProvider>
     <div className="flex h-dvh flex-col" style={{ background: 'var(--bg-app)' }}>
       <Header
         vision={aktiveVision}
@@ -112,10 +116,6 @@ export function AppShell() {
       />
       <SpeicherHinweis />
       <div className="flex min-h-0 flex-1">
-        {/*
-          Auf der Hauptfläche steht bis Scheibe 3 der Übergangstext TX-17;
-          danach ersetzt ihn die Map.
-        */}
         <main className="min-w-0 flex-1">
           {aktiveVision == null ? (
             <EmptyState
@@ -130,7 +130,10 @@ export function AppShell() {
               }
             />
           ) : (
-            <EmptyState text={TX['TX-17']} />
+            <MapView
+              vision={aktiveVision}
+              onNeueKarte={(typ, elternId) => setNeueKarte({ typ, elternId })}
+            />
           )}
         </main>
         <SidePanel
@@ -160,5 +163,6 @@ export function AppShell() {
         />
       )}
     </div>
+    </ReactFlowProvider>
   )
 }

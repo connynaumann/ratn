@@ -1,0 +1,345 @@
+/*
+ * Map-View: Canvas, Karten, Kanten.
+ * Werte aus docs/PRD_Brief.md, Abschnitt 4 (A-17, A-18, A-19, A-46).
+ * Keine Farbwerte – nur Tokens aus tokens.css.
+ */
+
+/* ============ CANVAS (A-46) ============ */
+.map-flaeche {
+  width: 100%;
+  height: 100%;
+  background: var(--bg-app);
+}
+
+/* Punktraster: Abstand 24 px, Punktgröße 1 px, Farbe --border-default.
+   Die Farbe kommt über CSS statt über die color-Eigenschaft von React Flow,
+   weil ein var() in einem SVG-Präsentationsattribut nicht überall greift. */
+.react-flow__background circle {
+  fill: var(--border-default);
+}
+
+.react-flow__attribution {
+  display: none;
+}
+
+/* Auswahlrahmen 1,5 px --accent (wie .bp-bar) – gesetzt auf der Karte selbst,
+   damit der Rahmen die Kartenform trifft. */
+.react-flow__node.selected {
+  outline: none;
+}
+.react-flow__node:focus-visible {
+  outline: none;
+}
+.react-flow__node:focus-visible .karte {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Anschlüsse sind unsichtbar: Kanten entstehen aus den Daten, nicht per Hand */
+.react-flow__handle {
+  opacity: 0;
+  pointer-events: none;
+  width: 1px;
+  height: 1px;
+  min-width: 1px;
+  min-height: 1px;
+  border: none;
+}
+
+/* ============ KARTEN (A-17) ============ */
+.karte {
+  /* Die Maße setzt React Flow am Knoten, aus masse.ts – eine Quelle. */
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  box-sizing: border-box;
+  font-family: var(--font-sans);
+  color: var(--text-primary);
+  /* Farb- und Hintergrundwechsel 150 ms (A-19) */
+  transition:
+    background 0.15s,
+    border-color 0.15s,
+    opacity 0.15s;
+  cursor: grab;
+}
+.karte:active {
+  cursor: grabbing;
+}
+.karte-gewaehlt {
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 1.5px var(--accent);
+}
+
+.karte-vision {
+  padding: var(--s-4);
+  background: var(--bg-surface);
+  border-radius: var(--r-xl);
+  box-shadow: var(--shadow-lg);
+  justify-content: space-between;
+}
+.karte-vision:hover {
+  background: var(--bg-elevated);
+}
+
+.karte-goal {
+  padding: var(--s-3) var(--s-4) var(--s-3) var(--s-5);
+  background: var(--bg-panel);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-lg);
+  justify-content: space-between;
+  overflow: hidden;
+}
+.karte-goal:hover {
+  background: var(--bg-elevated);
+}
+
+.karte-initiative {
+  /* 84 px sind knapp: zweizeiliger Titel (39) + Fuß (20) + Abstand (4)
+     brauchen 63, dazu 8 oben und unten. Mit 12 px Polsterung lief die Karte
+     über und schnitt das Datum ab. */
+  padding: var(--s-2) var(--s-3) var(--s-2) var(--s-4);
+  gap: var(--s-1);
+  background: var(--bg-panel);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-lg);
+  justify-content: space-between;
+  overflow: hidden;
+}
+.karte-initiative:hover {
+  background: var(--bg-elevated);
+}
+
+.karte-metric {
+  flex-direction: row;
+  align-items: center;
+  gap: var(--s-2);
+  padding: 0 var(--s-3);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-pill);
+}
+.karte-metric:hover {
+  background: var(--bg-elevated);
+}
+
+/* Farbstreifen links: 6 px am Ziel, 4 px an der Initiative (A-15) */
+.karte-streifen {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  background: var(--karte-farbe);
+}
+.karte-goal .karte-streifen {
+  width: 6px;
+}
+.karte-initiative .karte-streifen {
+  width: 4px;
+}
+
+.karte-kopf {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--s-2);
+  min-width: 0;
+}
+.karte-titel {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+.karte-titel-ziel {
+  font-size: 15px;
+  font-weight: 600;
+}
+.karte-titel-initiative {
+  font-size: 13px;
+  font-weight: 600;
+}
+.karte-titel-metrik {
+  font-size: 12px;
+  font-weight: 500;
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
+  flex: 1;
+  min-width: 0;
+}
+
+.karte-status,
+.karte-prio {
+  flex: none;
+}
+.karte-status,
+.karte-prio {
+  padding: 2px 8px;
+  font-size: 11px;
+}
+
+.karte-datum {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  /* Ein umbrechender Zeitraum sprengt die Kartenhöhe */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.karte-initiative .karte-datum {
+  font-size: 11px;
+}
+.karte-werte {
+  flex: none;
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.karte-fuss {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-2);
+}
+
+/* Fortschrittsbalken 3 px auf --bg-active mit Prozent im Mono */
+.karte-fortschritt {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+}
+.karte-balken {
+  flex: 1;
+  height: 3px;
+  border-radius: var(--r-pill);
+  background: var(--bg-active);
+  overflow: hidden;
+}
+.karte-balken-fuellung {
+  height: 100%;
+  border-radius: var(--r-pill);
+  transition: width 0.15s;
+}
+.karte-fortschritt .t-mono {
+  font-size: 11px;
+  flex: none;
+}
+
+/* Hover-Plus: Kreis 24 px in --accent am rechten Kartenrand (A-35) */
+.karte-plus {
+  position: absolute;
+  right: -12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: none;
+  background: var(--accent);
+  color: var(--on-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.15s;
+  padding: 0;
+  z-index: 2;
+}
+.karte:hover .karte-plus,
+.karte-plus:focus-visible {
+  opacity: 1;
+}
+.karte-plus:hover {
+  background: var(--accent-hover);
+}
+
+/* ============ KANTEN (A-18) ============ */
+/* Breiten und Farben stehen in knoten.ts, weil React Flow sie als style
+   bekommt. Hier nur, was sich in CSS besser ausdrückt. */
+.react-flow__edge-path {
+  transition: stroke-width 0.15s;
+}
+.react-flow__edge:hover .react-flow__edge-path {
+  stroke-width: calc(var(--kante-breite, 6px) + 2px);
+}
+.kante-blockade .react-flow__edge-path {
+  stroke-dasharray: 8 6;
+}
+
+/* ============ STEUERUNG ============ */
+/* Zoom unten links als .btn-secondary sm, Minimap unten rechts (A-46) */
+.map-zoom {
+  position: absolute;
+  left: var(--s-4);
+  bottom: var(--s-4);
+  display: flex;
+  gap: var(--s-2);
+  z-index: 5;
+}
+
+.react-flow__minimap {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-md);
+  right: var(--s-4);
+  bottom: var(--s-4);
+}
+.react-flow__minimap-mask {
+  fill: var(--bg-app);
+  fill-opacity: 0.6;
+}
+
+/* Karten in der Minimap tragen ihre Zielfarbe (A-46). Sie kommt über eine
+   Klasse, weil React Flow nodeColor in das SVG-Attribut `fill` schreibt und
+   ein var() dort nicht aufgelöst wird. */
+.minimap-karte {
+  stroke: none;
+}
+.minimap-vision {
+  fill: var(--accent);
+}
+.minimap-line-1 {
+  fill: var(--line-1);
+}
+.minimap-line-2 {
+  fill: var(--line-2);
+}
+.minimap-line-3 {
+  fill: var(--line-3);
+}
+.minimap-line-4 {
+  fill: var(--line-4);
+}
+.minimap-line-5 {
+  fill: var(--line-5);
+}
+.minimap-line-6 {
+  fill: var(--line-6);
+}
+.minimap-line-7 {
+  fill: var(--line-7);
+}
+.minimap-line-8 {
+  fill: var(--line-8);
+}
+
+/* ============ TOAST (E-09, E-11) ============ */
+/* --bg-elevated, --r-md, --shadow-md, 13/500, unten mittig */
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: var(--s-6);
+  transform: translateX(-50%);
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-md);
+  font-size: 13px;
+  font-weight: 500;
+  padding: var(--s-3) var(--s-4);
+  z-index: 40;
+}

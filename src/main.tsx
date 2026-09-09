@@ -5,10 +5,15 @@ import { createRoot } from 'react-dom/client'
 // (Brief A-16).
 import '@fontsource-variable/inter'
 
+// React Flow bringt eigene Grundstile mit; sie stehen vor map.css, damit
+// unsere Tokens gewinnen.
+import '@xyflow/react/dist/style.css'
+
 import './styles/tokens.css'
 import './styles/theme.css'
 import './styles/base.css'
 import './styles/components.css'
+import './styles/map.css'
 
 import { App } from './App'
 

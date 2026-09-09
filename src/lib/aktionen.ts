@@ -1,6 +1,7 @@
 import { heute } from './datum'
 import { naechsteZielfarbe } from './farben'
 import { goalVisionId } from './daten'
+import { neuePosition } from '@/features/map/positionen'
 import type { Daten, Kartentyp, KartenRef } from './model'
 import type { Vorgang } from './warteschlange'
 
@@ -57,6 +58,17 @@ export function zielAnlegen(
   erzeugeId: () => string = neueId,
 ): Ergebnis & { id: string } {
   const id = erzeugeId()
+  const vision = daten.vision.find((v) => v.id === visionId)
+  const sortIndex = daten.goal_vision.filter((gv) => gv.vision_id === visionId)
+    .length
+  const pos =
+    vision != null
+      ? neuePosition(
+          { typ: 'vision', pos: { x: vision.pos_x, y: vision.pos_y } },
+          'goal',
+          sortIndex,
+        )
+      : { x: 0, y: 0 }
   const zeile = {
     id,
     title: titel.trim(),
@@ -66,11 +78,9 @@ export function zielAnlegen(
     priority: null,
     start_date: heute(),
     end_date: null,
-    pos_x: 0,
-    pos_y: 0,
+    pos_x: pos.x,
+    pos_y: pos.y,
   }
-  const sortIndex = daten.goal_vision.filter((gv) => gv.vision_id === visionId)
-    .length
   const verknuepfung = {
     goal_id: id,
     vision_id: visionId,
@@ -105,6 +115,16 @@ export function initiativeAnlegen(
   erzeugeId: () => string = neueId,
 ): Ergebnis & { id: string } {
   const id = erzeugeId()
+  const ziel = daten.goal.find((g) => g.id === goalId)
+  const sortIndex = daten.initiative.filter((i) => i.goal_id === goalId).length
+  const pos =
+    ziel != null
+      ? neuePosition(
+          { typ: 'goal', pos: { x: ziel.pos_x, y: ziel.pos_y } },
+          'initiative',
+          sortIndex,
+        )
+      : { x: 0, y: 0 }
   const zeile = {
     id,
     goal_id: goalId,
@@ -114,9 +134,9 @@ export function initiativeAnlegen(
     priority: null,
     start_date: heute(),
     end_date: null,
-    pos_x: 0,
-    pos_y: 0,
-    sort_index: daten.initiative.filter((i) => i.goal_id === goalId).length,
+    pos_x: pos.x,
+    pos_y: pos.y,
+    sort_index: sortIndex,
   }
   return {
     id,
@@ -135,6 +155,18 @@ export function metrikAnlegen(
   erzeugeId: () => string = neueId,
 ): Ergebnis & { id: string } {
   const id = erzeugeId()
+  const initiative = daten.initiative.find((i) => i.id === initiativeId)
+  const geschwister = daten.metric.filter(
+    (m) => m.initiative_id === initiativeId,
+  ).length
+  const pos =
+    initiative != null
+      ? neuePosition(
+          { typ: 'initiative', pos: { x: initiative.pos_x, y: initiative.pos_y } },
+          'metric',
+          geschwister,
+        )
+      : { x: 0, y: 0 }
   const zeile = {
     id,
     initiative_id: initiativeId,
@@ -143,8 +175,8 @@ export function metrikAnlegen(
     target_value: null,
     current_value: null,
     unit: null,
-    pos_x: 0,
-    pos_y: 0,
+    pos_x: pos.x,
+    pos_y: pos.y,
   }
   return {
     id,
