@@ -1,6 +1,6 @@
 # PRD-Brief für Claude Code – System Map
 
-**Erstellt:** 07.09.2026-15:26 · **Aktualisiert:** 07.09.2026-18:48 · **Version:** 0.5 (freigegeben, Abstimmung zu Scheibe 1 eingearbeitet)
+**Erstellt:** 07.09.2026-15:26 · **Aktualisiert:** 09.09.2026 · **Version:** 0.6 (freigegeben, Prüfvorrichtung und T-18 eingetragen)
 
 **Quellen:** Google Doc „260907-System Map-Spezifikation“ (Stand 07.09.2026); `framer-dark-design-system.html` (Dropbox „System Map“, Stand 23.07.2026); Google Doc „260907-System Map-Testdaten“ (Stand 07.09.2026); Antworten von Conny vom 07.09.2026 (elf Fragen)
 
@@ -15,6 +15,8 @@ Dieser Brief trennt drei Arten von Aussagen:
 - **Annahme A-xx** – fehlt in der Spezifikation, Vorschlag von mir. Alle Annahmen stehen gesammelt in Abschnitt 14. Zum Freigeben reicht: „A-03 nein, stattdessen …“.
 
 Unklare oder unvollständige Stellen der Spezifikation sind mit **[Spez unvollständig]** markiert.
+
+**Neu in v0.6:** Prüfvorrichtung für die Map (D-16); neuer Abnahmetest T-18 für US-13, T-08 zur Hälfte automatisiert.
 
 **Neu in v0.5:** Antworten aus der Abstimmung zum Plan für Scheibe 1 (07.09.2026-18:48). Neue Entscheidungen D-12 bis D-15: Seed über `/dev/seed` in der angemeldeten App statt über einen Service-Role-Key; `/dev/components` und `/dev/seed` werden hinter dem Login mit ausgeliefert; Migrationsdateien auf die angewendeten Versionen umbenannt und `supabase/config.toml` angelegt; die einmaligen Supabase-Auth-Einstellungen macht Conny im Dashboard nach der Liste in der README. Neue Annahmen A-51 bis A-56, darunter die dokumentierte Kontrast-Ausnahme für gefüllte Buttons. Korrigiert: TX-07 ohne Modus-Texte, US-23 nur dunkel, E-07a nachgetragen, Formulierung zum Client-Key, drei Migrationen, Sidepanel-Breite und Kartenradien begründet. Beim Bauen von Scheibe 1 fiel auf, dass **E-14 in `docs/texte.md` fehlte**, obwohl der Brief den Text seit v0.4 führt; wörtlich nachgetragen.
 
@@ -738,7 +740,7 @@ Dazu liegen keine expliziten Informationen in der Spezifikation vor. Alle Zeilen
 | T-05 | US-09 | Ziel mit offener Initiative → „manuell setzen“ → Abgeschlossen | Ziel grün, TX-04 sichtbar; Schalter aus → wieder berechnet |
 | T-06 | US-10 | Ziel B blockiert durch Ziel A (offen) | B rot, gestrichelte Kante; A abschließen → B neu berechnet |
 | T-07 | US-10 | A → B, dann B → A versuchen | E-08 |
-| T-08 | US-12 | Karte ziehen → Neuladen → zweiter Browser-Kontext | Position identisch |
+| T-08 | US-12 | Karte ziehen → Neuladen → zweiter Browser-Kontext | Position identisch. **Automatisiert** in `tests/e2e/map.spec.ts` auf der Prüfvorrichtung (Ziehen und Neuladen); der zweite Browser-Kontext braucht die Datenbank und bleibt manuell |
 | T-09 | US-14, US-15 | Testdaten laden → Sortiert → Netz | Keine überlappenden Karten (Bounding-Box-Prüfung) |
 | T-10 | US-17 | Linear, Woche → Initiative 01.09.–30.09. | Balken über KW 36–40; Monat: Spalte September |
 | T-11 | US-19 | Filter Status Blockiert | Nur blockierte Karten voll sichtbar; Sidepanel nur blockierte mit Eltern |
@@ -748,8 +750,11 @@ Dazu liegen keine expliziten Informationen in der Spezifikation vor. Alle Zeilen
 | T-15 | US-07 | Ziel mit 2 Initiativen löschen | E-07 mit „2“, danach alle drei Karten weg |
 | T-16 | US-24 | Export → Daten löschen → Import | Kartenanzahl wie vor dem Export |
 | T-17 | US-25 | Ziel „Finanzierung“ → Visionen → zweite Vision abwählen und wieder anhaken; Vision wechseln | Ziel in beiden Visionen mit gleicher Farbe und gleichem Status; letzte Vision abwählen → E-14 |
+| T-18 | US-13 | Map öffnen → herauszoomen bis zum Anschlag → hineinzoomen bis zum Anschlag → Fit to Screen im Header und auf dem Canvas | Start mit Fit to Screen, alle Karten im Bild; Zoom endet bei 10 % und 200 %; Fit stellt den Ausgangszoom wieder her. **Automatisiert** in `tests/e2e/map.spec.ts` |
 
-**Fertig ist der Prototyp, wenn:** T-01 bis T-17 auf der Vercel-URL bestehen, alle Screens die Zustände leer, laden und Fehler zeigen, die Oberfläche der Design-System-Datei entspricht, Desktop und Tablet-Querformat funktionieren, keine Platzhaltertexte sichtbar sind und die README ein Setup in unter 15 Minuten erlaubt.
+**Prüfvorrichtung (D-16):** Verhalten der Map – Zoomgrenzen, Fit to Screen, Ziehen – lässt sich nur in einem echten Browser prüfen; jsdom kennt keine Maße, und die App liegt hinter dem Magic-Link-Login. Dafür gibt es `tests/fixture/map.html`: dieselbe Oberfläche mit denselben Aktionen, gespeist aus `docs/testdaten.json`, Zustand im Speicher des Tabs. Sie wird nicht ausgeliefert – Vite baut nur `index.html` – und ist nur über den Entwicklungsserver erreichbar, den Playwright selbst startet.
+
+**Fertig ist der Prototyp, wenn:** T-01 bis T-17 auf der Vercel-URL bestehen und T-18 auf der Prüfvorrichtung (er prüft Verhalten des Canvas, das nicht von der Datenbank abhängt), alle Screens die Zustände leer, laden und Fehler zeigen, die Oberfläche der Design-System-Datei entspricht, Desktop und Tablet-Querformat funktionieren, keine Platzhaltertexte sichtbar sind und die README ein Setup in unter 15 Minuten erlaubt.
 
 ## 14 Entscheidungen und Annahmen
 
@@ -772,6 +777,7 @@ Dazu liegen keine expliziten Informationen in der Spezifikation vor. Alle Zeilen
 | D-13 | `/dev/components` und `/dev/seed` werden mit ausgeliefert, nur hinter dem Login erreichbar und nirgends in der Oberfläche verlinkt. So bleibt T-12 auf der Vercel-Adresse prüfbar |
 | D-14 | Die drei Migrationsdateien wurden auf die tatsächlich angewendeten Versionen umbenannt (Inhalt unverändert), `supabase/config.toml` mit `project_id` angelegt |
 | D-15 | Die einmaligen Supabase-Auth-Einstellungen (Site URL, Redirect URLs, Gültigkeit des Magic Links, Sitzungsdauer, Mailvorlage) nimmt Conny im Dashboard vor, nach der Liste im Abschnitt „Einmalige Supabase-Einstellungen“ der README |
+| D-16 | Prüfvorrichtung unter `tests/fixture/map.html` für Playwright: dieselbe Oberfläche ohne Login, gespeist aus `docs/testdaten.json`, nicht im Produktivbuild. Damit sind T-08 (Client-Hälfte) und der neue T-18 automatisiert |
 
 **Annahmen zur Bestätigung**
 

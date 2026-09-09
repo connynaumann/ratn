@@ -115,6 +115,19 @@ Vor dem ersten `pnpm test:e2e` einmal die Browser laden:
 pnpm exec playwright install chromium
 ```
 
+### Prüfvorrichtung für die Map
+
+Zoomgrenzen, Fit to Screen und das Ziehen von Karten lassen sich nur in einem
+echten Browser prüfen – jsdom kennt keine Maße, und die App liegt hinter dem
+Magic-Link-Login. Dafür gibt es `tests/fixture/map.html`: dieselbe Oberfläche
+mit denselben Aktionen, gespeist aus `docs/testdaten.json`, Zustand im Speicher
+des Tabs.
+
+Sie wird **nicht ausgeliefert** – Vite baut nur `index.html` – und ist nur über
+den Entwicklungsserver erreichbar. Zum Anschauen: `pnpm dev`, dann
+<http://localhost:5173/tests/fixture/map.html?frisch>. Die Prüfungen dazu
+stehen in `tests/e2e/map.spec.ts` (Abnahmetests T-08 und T-18).
+
 ---
 
 ## Testdaten einspielen

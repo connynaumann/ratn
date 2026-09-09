@@ -51,7 +51,9 @@ src/lib/supabase.ts                Client, Laden, Speichern mit Debounce
 src/dev/                           Dev-Routen /dev/components und /dev/seed
 supabase/migrations/               SQL-Migrationen
 supabase/config.toml               Bindung an das Supabase-Projekt
-tests/                             Vitest und Playwright
+tests/unit/                        Vitest
+tests/e2e/                         Playwright
+tests/fixture/                     Prüfvorrichtung für die Map (nicht im Build, Brief D-16)
 .env.example                       alle Umgebungsvariablen, ohne Werte
 ```
 
