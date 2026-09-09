@@ -13,9 +13,15 @@ type Props = {
   vision: Vision | null
   onNeueKarte: (typ: Kartentyp, elternId: string) => void
   onLoeschen: (ref: KartenRef) => void
+  onAbhaengigkeit: (zielId: string) => void
 }
 
-export function SidePanel({ vision, onNeueKarte, onLoeschen }: Props) {
+export function SidePanel({
+  vision,
+  onNeueKarte,
+  onLoeschen,
+  onAbhaengigkeit,
+}: Props) {
   const { auswahl, waehleKarte, speicherZustand } = useStore()
 
   const imDetail = auswahl != null
@@ -45,6 +51,7 @@ export function SidePanel({ vision, onNeueKarte, onLoeschen }: Props) {
               ref_={auswahl}
               onNeueMetrik={(id) => onNeueKarte('metric', id)}
               onLoeschen={onLoeschen}
+              onAbhaengigkeit={onAbhaengigkeit}
             />
           ) : (
             <Liste vision={vision} onNeueKarte={onNeueKarte} />

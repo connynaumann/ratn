@@ -4,8 +4,10 @@ import { Button } from '@/components/ui'
 import { E, UI } from '@/content/texte'
 import type { Kartentyp, KartenRef } from '@/lib/model'
 import { betroffeneKarten } from '@/lib/aktionen'
+import { zaehleInitiativen } from '@/lib/zaehler'
 import { MapView } from '@/features/map/MapView'
 import { LoeschenDialog } from '@/features/dialoge/LoeschenDialog'
+import { AbhaengigkeitDialog } from '@/features/dialoge/AbhaengigkeitDialog'
 import { NeueKarteDialog } from '@/features/dialoge/NeueKarteDialog'
 import { SidePanel } from '@/features/sidepanel/SidePanel'
 import { useStore } from '@/store/useStore'
@@ -37,6 +39,7 @@ export function AppShell() {
 
   const [neueKarte, setNeueKarte] = useState<NeueKarte | null>(null)
   const [zuLoeschen, setZuLoeschen] = useState<KartenRef | null>(null)
+  const [abhaengigkeitFuer, setAbhaengigkeitFuer] = useState<string | null>(null)
 
   if (ladeStatus === 'laedt') return <LadeZustand />
 
@@ -61,19 +64,9 @@ export function AppShell() {
     )
   }
 
-  /**
-   * Zähler über alle Initiativen der aktiven Vision (Brief Abschnitt 7).
-   * Er reagiert nicht auf den Filter – den gibt es erst in Scheibe 4 (A-40).
-   */
-  const zielIds = new Set(
-    daten.goal_vision
-      .filter((gv) => gv.vision_id === aktiveVision?.id)
-      .map((gv) => gv.goal_id),
-  )
-  const initiativen = daten.initiative.filter((i) => zielIds.has(i.goal_id))
-  const abgeschlossen = initiativen.filter(
-    (i) => berechnet.status.get(i.id) === 'abgeschlossen',
-  ).length
+  // Zähler über alle Initiativen der aktiven Vision, unabhängig vom Filter
+  // (Brief A-40). Die Rechnung steht in src/lib/zaehler.ts.
+  const zaehler = zaehleInitiativen(daten, berechnet, aktiveVision?.id ?? null)
 
   function anlegen(titel: string) {
     if (neueKarte == null) return
@@ -111,8 +104,8 @@ export function AppShell() {
     <div className="flex h-dvh flex-col" style={{ background: 'var(--bg-app)' }}>
       <Header
         vision={aktiveVision}
-        initiativenGesamt={initiativen.length}
-        initiativenAbgeschlossen={abgeschlossen}
+        initiativenGesamt={zaehler.gesamt}
+        initiativenAbgeschlossen={zaehler.abgeschlossen}
       />
       <SpeicherHinweis />
       <div className="flex min-h-0 flex-1">
@@ -140,6 +133,7 @@ export function AppShell() {
           vision={aktiveVision}
           onNeueKarte={(typ, elternId) => setNeueKarte({ typ, elternId })}
           onLoeschen={setZuLoeschen}
+          onAbhaengigkeit={setAbhaengigkeitFuer}
         />
       </div>
 
@@ -147,6 +141,11 @@ export function AppShell() {
         typ={neueKarte?.typ ?? null}
         onAbbrechen={() => setNeueKarte(null)}
         onAnlegen={anlegen}
+      />
+
+      <AbhaengigkeitDialog
+        zielId={abhaengigkeitFuer}
+        onSchliessen={() => setAbhaengigkeitFuer(null)}
       />
 
       {zuLoeschen != null && loeschKarte != null && (

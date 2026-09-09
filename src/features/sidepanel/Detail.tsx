@@ -15,6 +15,7 @@ import type { Goal, Initiative, KartenRef, Metric, Vision } from '@/lib/model'
 import { alsProzent } from '@/lib/status'
 import { titelGueltig } from '@/lib/titel'
 import { useStore } from '@/store/useStore'
+import { BlockiertDurch } from './BlockiertDurch'
 import { MetrikFelder } from './MetrikFelder'
 import { useEntwurf } from './useEntwurf'
 import { VisionenFeld } from './VisionenFeld'
@@ -60,9 +61,15 @@ type Props = {
   ref_: KartenRef
   onNeueMetrik: (initiativeId: string) => void
   onLoeschen: (ref: KartenRef) => void
+  onAbhaengigkeit: (zielId: string) => void
 }
 
-export function Detail({ ref_, onNeueMetrik, onLoeschen }: Props) {
+export function Detail({
+  ref_,
+  onNeueMetrik,
+  onLoeschen,
+  onAbhaengigkeit,
+}: Props) {
   const { daten, berechnet, karteAendern } = useStore()
   const karte = findeKarte(ref_, daten)
   const [datumsFehler, setDatumsFehler] = useState<string | null>(null)
@@ -304,6 +311,18 @@ export function Detail({ ref_, onNeueMetrik, onLoeschen }: Props) {
 
       {ref_.typ === 'goal' && (
         <>
+          <Divider />
+          <div className="sec-label detail-abschnitt">
+            {UI.sidepanel.abschnitte.abhaengigkeiten}
+          </div>
+          <PropRow label={UI.sidepanel.felder.blockiertDurch}>
+            <span />
+          </PropRow>
+          <BlockiertDurch
+            zielId={ref_.id}
+            onHinzufuegen={() => onAbhaengigkeit(ref_.id)}
+          />
+
           <Divider />
           <div className="sec-label detail-abschnitt">
             {UI.sidepanel.felder.visionen}

@@ -343,3 +343,8 @@
   padding: var(--s-3) var(--s-4);
   z-index: 40;
 }
+
+/* Vom Filter nicht getroffen: 25 % Deckkraft, Position bleibt (A-17, A-39) */
+.react-flow__node.karte-gedimmt {
+  opacity: 0.25;
+}

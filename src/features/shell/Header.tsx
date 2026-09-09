@@ -1,8 +1,9 @@
-import { Filter, Maximize2, ImageDown, Menu } from 'lucide-react'
+import { Maximize2, ImageDown, Menu } from 'lucide-react'
 import { useReactFlow } from '@xyflow/react'
 import { Badge, Button, Segmented, Tabs } from '@/components/ui'
 import { TX, UI, fuelle } from '@/content/texte'
 import type { Vision } from '@/lib/model'
+import { FilterPopover } from './FilterPopover'
 import { VisionsAuswahl } from './VisionsAuswahl'
 import { VisionsTitel } from './VisionsTitel'
 
@@ -101,10 +102,7 @@ export function Header({
       </div>
 
       <div className="flex items-center justify-end gap-3">
-        <Button variante="secondary" groesse="sm" disabled>
-          <Filter size={14} strokeWidth={1.5} aria-hidden="true" />
-          {UI.header.filter}
-        </Button>
+        <FilterPopover />
         <Badge punkt farbToken="success" data-numeric>
           {fuelle(TX['TX-05'], {
             x: initiativenAbgeschlossen,

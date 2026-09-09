@@ -1,4 +1,6 @@
 import { createContext } from 'react'
+import type { QuellenFehler } from '@/lib/abhaengigkeiten'
+import type { Filter } from '@/lib/filter'
 import type { Daten, KartenRef, Vision } from '@/lib/model'
 import type { StatusUndFortschritt } from '@/lib/status'
 import type { SpeicherZustand } from '@/lib/warteschlange'
@@ -29,6 +31,16 @@ export type Store = {
   karteLoeschen: (ref: KartenRef) => void
   /** false = letzte Vision, Verknüpfung bleibt bestehen (E-14) */
   zielVisionZuordnen: (goalId: string, visionId: string, an: boolean) => boolean
+
+  /** null = angelegt, sonst der Grund für die Ablehnung (E-08) */
+  abhaengigkeitAnlegen: (
+    quelle: { typ: 'goal' | 'initiative'; id: string },
+    zielId: string,
+  ) => QuellenFehler | null
+  abhaengigkeitLoeschen: (id: string) => void
+
+  filter: Filter
+  setzeFilter: (filter: Filter) => void
 }
 
 export const StoreContext = createContext<Store | null>(null)

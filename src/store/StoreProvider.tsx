@@ -2,6 +2,9 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { ReactNode } from 'react'
 import * as aktionen from '@/lib/aktionen'
 import { ladeAlles, sendeVorgaenge } from '@/lib/daten'
+import type { QuellenFehler } from '@/lib/abhaengigkeiten'
+import { LEERER_FILTER } from '@/lib/filter'
+import type { Filter } from '@/lib/filter'
 import { LEERE_DATEN } from '@/lib/model'
 import type { Daten, KartenRef } from '@/lib/model'
 import { berechneAlles } from '@/lib/status'
@@ -174,6 +177,54 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     [uebernimm],
   )
 
+  const abhaengigkeitAnlegen = useCallback(
+    (
+      quelle: { typ: 'goal' | 'initiative'; id: string },
+      zielId: string,
+    ): QuellenFehler | null => {
+      const ergebnis = aktionen.abhaengigkeitAnlegen(
+        datenRef.current,
+        quelle,
+        zielId,
+      )
+      if (aktionen.istAbhaengigkeitsFehler(ergebnis)) return ergebnis.fehler
+      uebernimm(ergebnis)
+      return null
+    },
+    [uebernimm],
+  )
+
+  const abhaengigkeitLoeschen = useCallback(
+    (id: string) => {
+      uebernimm(aktionen.abhaengigkeitLoeschen(datenRef.current, id))
+    },
+    [uebernimm],
+  )
+
+  /**
+   * Der Filter steht in den Einstellungen und gilt damit auf allen Geräten
+   * (Brief A-25).
+   */
+  const filter = useMemo<Filter>(
+    () => ({
+      status: daten.settings?.filter_status ?? LEERER_FILTER.status,
+      zielIds: daten.settings?.filter_goal_ids ?? LEERER_FILTER.zielIds,
+    }),
+    [daten.settings?.filter_status, daten.settings?.filter_goal_ids],
+  )
+
+  const setzeFilter = useCallback(
+    (neu: Filter) => {
+      uebernimm(
+        aktionen.einstellungAendern(datenRef.current, {
+          filter_status: neu.status,
+          filter_goal_ids: neu.zielIds,
+        }),
+      )
+    },
+    [uebernimm],
+  )
+
   const wert: Store = useMemo(
     () => ({
       ladeStatus,
@@ -193,6 +244,10 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       karteAendern,
       karteLoeschen,
       zielVisionZuordnen,
+      abhaengigkeitAnlegen,
+      abhaengigkeitLoeschen,
+      filter,
+      setzeFilter,
     }),
     [
       ladeStatus,
@@ -211,6 +266,10 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       karteAendern,
       karteLoeschen,
       zielVisionZuordnen,
+      abhaengigkeitAnlegen,
+      abhaengigkeitLoeschen,
+      filter,
+      setzeFilter,
     ],
   )
 

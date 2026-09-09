@@ -680,3 +680,99 @@ select.input {
   padding-top: 5px;
   padding-bottom: 5px;
 }
+
+/* ============ ABHÄNGIGKEITEN ============ */
+/* S-10: Liste der möglichen Blockierer */
+.quellen-liste {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 280px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.quellen-zeile {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  width: 100%;
+  padding: 7px 10px;
+  border: none;
+  border-radius: var(--r-sm);
+  background: transparent;
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  text-align: left;
+  cursor: pointer;
+}
+.quellen-zeile:hover:not(:disabled) {
+  background: var(--bg-hover);
+}
+.quellen-zeile:disabled {
+  color: var(--text-disabled);
+  cursor: not-allowed;
+}
+.quellen-typ {
+  flex: none;
+  width: 68px;
+}
+.quellen-titel {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.quellen-eltern {
+  margin-left: auto;
+  flex: none;
+}
+
+/* „Blockiert durch“ im Detailpanel */
+.blockiert-durch {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+  align-items: center;
+}
+.blockade-badge {
+  color: var(--text-primary);
+  max-width: 100%;
+}
+.blockade-weg {
+  background: none;
+  border: none;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  display: flex;
+  padding: 0;
+}
+.blockade-weg:hover {
+  color: var(--danger);
+}
+
+/* ============ FILTER ============ */
+.filter-panel {
+  width: 260px;
+  padding: var(--s-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+  z-index: 30;
+}
+.filter-gruppe {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+}
+.filter-zeile {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  cursor: pointer;
+}
+.filter-fuss {
+  display: flex;
+  justify-content: flex-end;
+}

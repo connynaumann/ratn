@@ -1,3 +1,5 @@
+import { pruefeQuelle } from './abhaengigkeiten'
+import type { QuellenFehler } from './abhaengigkeiten'
 import { heute } from './datum'
 import { naechsteZielfarbe } from './farben'
 import { goalVisionId } from './daten'
@@ -364,5 +366,57 @@ export function einstellungAendern(
     vorgaenge: [
       { art: 'aendern', tabelle: 'settings', id: 'eigene', felder },
     ],
+  }
+}
+
+// ------------------------------------------------ Abhängigkeiten (US-10)
+
+export type AbhaengigkeitErgebnis = Ergebnis | { fehler: QuellenFehler }
+
+export function istAbhaengigkeitsFehler(
+  e: AbhaengigkeitErgebnis,
+): e is { fehler: QuellenFehler } {
+  return 'fehler' in e
+}
+
+/**
+ * Legt „Ziel wird blockiert durch Quelle“ an (US-10).
+ *
+ * Geprüft wird vorher: kein Selbstbezug, keine Dopplung, kein Kreis (E-08).
+ * Dieselben Regeln stehen als Constraint und Trigger in der Datenbank; der
+ * Client prüft, damit die Meldung erscheint, bevor etwas gesendet wird.
+ */
+export function abhaengigkeitAnlegen(
+  daten: Daten,
+  quelle: { typ: 'goal' | 'initiative'; id: string },
+  zielId: string,
+  erzeugeId: () => string = neueId,
+): AbhaengigkeitErgebnis {
+  const fehler = pruefeQuelle(daten, quelle, zielId)
+  if (fehler != null) return { fehler }
+
+  const id = erzeugeId()
+  const zeile = {
+    id,
+    source_type: quelle.typ,
+    source_id: quelle.id,
+    target_goal_id: zielId,
+  }
+  return {
+    daten: {
+      ...daten,
+      dependency: [...daten.dependency, zeile as Daten['dependency'][number]],
+    },
+    vorgaenge: [{ art: 'anlegen', tabelle: 'dependency', id, zeile }],
+  }
+}
+
+export function abhaengigkeitLoeschen(daten: Daten, id: string): Ergebnis {
+  return {
+    daten: {
+      ...daten,
+      dependency: daten.dependency.filter((d) => d.id !== id),
+    },
+    vorgaenge: [{ art: 'loeschen', tabelle: 'dependency', id }],
   }
 }

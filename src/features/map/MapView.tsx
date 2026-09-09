@@ -9,6 +9,7 @@ import {
 import type { NodeChange, NodeMouseHandler, OnNodeDrag } from '@xyflow/react'
 import { Toast } from '@/components/ui'
 import { E, SR } from '@/content/texte'
+import { istFilterAktiv, passtZumFilter } from '@/lib/filter'
 import type { Kartentyp, Vision } from '@/lib/model'
 import { useStore } from '@/store/useStore'
 import { KARTEN_TYPEN } from './Karten'
@@ -37,7 +38,8 @@ type Props = {
 }
 
 export function MapView({ vision, onNeueKarte }: Props) {
-  const { daten, berechnet, auswahl, waehleKarte, karteAendern } = useStore()
+  const { daten, berechnet, auswahl, waehleKarte, karteAendern, filter } =
+    useStore()
   const { fitView, setCenter, getZoom } = useReactFlow()
   const [hinweis, setHinweis] = useState<string | null>(null)
 
@@ -50,15 +52,27 @@ export function MapView({ vision, onNeueKarte }: Props) {
   )
   const kanten = useMemo(() => baueKanten(daten, vision.id), [daten, vision.id])
 
-  /** Auswahl aus dem Sidepanel auf die Karten übertragen (US-18). */
+  /**
+   * Auswahl aus dem Sidepanel auf die Karten übertragen (US-18) und den
+   * Filter anwenden: nicht passende Karten werden gedimmt, ihre Positionen
+   * bleiben (Brief A-39). Ausgeblendet wird auf der Map nichts – sonst
+   * verlöre die Karte ihr Bild vom Ganzen.
+   */
+  const gefiltert = istFilterAktiv(filter)
   const kartenMitAuswahl = useMemo(
     () =>
-      karten.map((k) => ({
-        ...k,
-        selected: auswahl?.id === k.id,
-        draggable: ziehbar,
-      })),
-    [karten, auswahl?.id, ziehbar],
+      karten.map((k) => {
+        const passt =
+          !gefiltert ||
+          passtZumFilter(daten, berechnet, { typ: k.data.typ, id: k.id }, filter)
+        return {
+          ...k,
+          selected: auswahl?.id === k.id,
+          draggable: ziehbar,
+          className: passt ? undefined : 'karte-gedimmt',
+        }
+      }),
+    [karten, auswahl?.id, ziehbar, gefiltert, daten, berechnet, filter],
   )
 
   /**

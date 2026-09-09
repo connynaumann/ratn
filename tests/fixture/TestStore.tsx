@@ -1,6 +1,8 @@
 import { useCallback, useMemo, useState } from 'react'
 import type { ReactNode } from 'react'
 import * as aktionen from '@/lib/aktionen'
+import { LEERER_FILTER } from '@/lib/filter'
+import type { Filter } from '@/lib/filter'
 import type { Daten, KartenRef } from '@/lib/model'
 import { berechneAlles } from '@/lib/status'
 import { StoreContext } from '@/store/StoreContext'
@@ -96,6 +98,25 @@ export function TestStore({
       uebernimm(e)
       return true
     },
+    abhaengigkeitAnlegen: (quelle, zielId) => {
+      const e = aktionen.abhaengigkeitAnlegen(daten, quelle, zielId)
+      if (aktionen.istAbhaengigkeitsFehler(e)) return e.fehler
+      uebernimm(e)
+      return null
+    },
+    abhaengigkeitLoeschen: (id) =>
+      uebernimm(aktionen.abhaengigkeitLoeschen(daten, id)),
+    filter: {
+      status: daten.settings?.filter_status ?? LEERER_FILTER.status,
+      zielIds: daten.settings?.filter_goal_ids ?? LEERER_FILTER.zielIds,
+    } satisfies Filter,
+    setzeFilter: (neu) =>
+      uebernimm(
+        aktionen.einstellungAendern(daten, {
+          filter_status: neu.status,
+          filter_goal_ids: neu.zielIds,
+        }),
+      ),
   }
 
   return <StoreContext.Provider value={wert}>{children}</StoreContext.Provider>

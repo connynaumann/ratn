@@ -49,7 +49,12 @@ let vorgaenge: Vorgang[]
 function zeige(start: Daten = basis()) {
   vorgaenge = []
   return rendereMitStore(
-    <SidePanel vision={v1} onNeueKarte={() => {}} onLoeschen={() => {}} />,
+    <SidePanel
+      vision={v1}
+      onNeueKarte={() => {}}
+      onLoeschen={() => {}}
+      onAbhaengigkeit={() => {}}
+    />,
     start,
     { vorgaenge },
   )
@@ -261,7 +266,12 @@ describe('US-22 · Speicherstand im Fuß', () => {
   it('zeigt TX-03 während des Speicherns', () => {
     vorgaenge = []
     rendereMitStore(
-      <SidePanel vision={v1} onNeueKarte={() => {}} onLoeschen={() => {}} />,
+      <SidePanel
+      vision={v1}
+      onNeueKarte={() => {}}
+      onLoeschen={() => {}}
+      onAbhaengigkeit={() => {}}
+    />,
       basis(),
       { vorgaenge, speicherZustand: 'speichert' },
     )

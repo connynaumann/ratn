@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useState } from 'react'
 import { Plus } from 'lucide-react'
 import { Button, TreeRow } from '@/components/ui'
-import { STATUS, UI } from '@/content/texte'
+import { STATUS, TX, UI } from '@/content/texte'
+import { sichtbareImBaum } from '@/lib/filter'
 import { STATUS_TOKEN } from '@/lib/model'
 import type { Kartentyp, KartenRef, Vision } from '@/lib/model'
 import { useStore } from '@/store/useStore'
@@ -25,8 +26,15 @@ type Props = {
 }
 
 export function Liste({ vision, onNeueKarte }: Props) {
-  const { daten, berechnet, auswahl, waehleKarte } = useStore()
+  const { daten, berechnet, auswahl, waehleKarte, filter } = useStore()
   const [zugeklappt, setZugeklappt] = useState<Set<string>>(ladeZugeklappt)
+
+  /**
+   * Bei aktivem Filter bleiben nur passende Karten und ihre Eltern stehen
+   * (US-19). Ohne Filter ist `sichtbar` null und es wird nichts ausgeblendet.
+   */
+  const sichtbar = sichtbareImBaum(daten, berechnet, filter)
+  const zeigen = (id: string) => sichtbar == null || sichtbar.has(id)
 
   useEffect(() => {
     speichereZugeklappt(zugeklappt)
@@ -59,6 +67,12 @@ export function Liste({ vision, onNeueKarte }: Props) {
     .sort((a, b) => a.sort_index - b.sort_index)
     .map((gv) => daten.goal.find((g) => g.id === gv.goal_id))
     .filter((g): g is NonNullable<typeof g> => g != null)
+    .filter((g) => zeigen(g.id))
+
+  // Passt gar nichts, sagt TX-10 das – statt einer leeren Fläche
+  if (sichtbar != null && !zeigen(vision.id)) {
+    return <p className="t-label">{TX['TX-10']}</p>
+  }
 
   return (
     <div className="tree-liste" role="tree" aria-label={UI.sidepanel.titelListe}>
@@ -76,6 +90,7 @@ export function Liste({ vision, onNeueKarte }: Props) {
           {ziele.map((ziel) => {
             const initiativen = daten.initiative
               .filter((i) => i.goal_id === ziel.id)
+              .filter((i) => zeigen(i.id))
               .sort((a, b) => a.sort_index - b.sort_index)
             const zielOffen = !zugeklappt.has(ziel.id)
             return (
@@ -101,9 +116,9 @@ export function Liste({ vision, onNeueKarte }: Props) {
                 {zielOffen && (
                   <>
                     {initiativen.map((initiative) => {
-                      const metriken = daten.metric.filter(
-                        (m) => m.initiative_id === initiative.id,
-                      )
+                      const metriken = daten.metric
+                        .filter((m) => m.initiative_id === initiative.id)
+                        .filter((m) => zeigen(m.id))
                       const initiativeOffen = !zugeklappt.has(initiative.id)
                       return (
                         <div key={initiative.id}>
